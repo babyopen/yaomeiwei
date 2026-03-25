@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>🇲🇴 特碼全維度分析</title>
+<title>特码全维度分析</title>
 <style>
 * {
   margin: 0;
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 body {
-  font-family: -apple-system, "Microsoft JhengHei", BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, "Microsoft YaHei", BlinkMacSystemFont, sans-serif;
   background: #F5F7FA;
   padding: 12px;
 }
@@ -19,15 +19,7 @@ body {
   max-width: 500px;
   margin: 0 auto;
 }
-.page-title {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 800;
-  color: #d32f2f;
-  margin: 0 0 14px;
-}
 
-/* 卡片 - 统一更精致 */
 .card {
   background: #FFFFFF;
   border-radius: 18px;
@@ -35,11 +27,16 @@ body {
   margin-bottom: 14px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
 .card-title {
   font-size: 16px;
   font-weight: 700;
   color: #1D1D1F;
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -51,34 +48,23 @@ body {
   background: #d32f2f;
   border-radius: 2px;
 }
-
-/* 倒计时 */
-.timer-card {
-  background: linear-gradient(90deg, #FFF5F5, #FFF0F0);
-}
-.timer-row {
-  text-align: center;
-  color: #cf1322;
-}
-.timer-text {
-  font-size: 15px;
-  opacity: 0.85;
-}
-.timer-count {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 4px;
-  font-family: monospace;
-  letter-spacing: 1px;
+.refresh-btn {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-/* 开奖球 */
 .ball-group {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   gap: 8px;
   margin: 12px 0;
+  flex-wrap: wrap;
 }
 .ball-item {
   display: flex;
@@ -113,31 +99,18 @@ body {
   line-height: 38px;
   padding: 0 2px;
 }
-.latest-info {
-  text-align: center;
-  color: #967341;
-  font-size: 15px;
-  margin-bottom: 12px;
-}
-.latest-time {
-  text-align: center;
-  font-size: 12px;
-  color: #888;
-  margin-top: 8px;
-}
 
-/* 标签栏 */
 .tab-bar {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 14px;
 }
 .tab-btn {
   flex: 1;
-  padding: 12px;
+  padding: 10px 6px;
   border-radius: 14px;
   border: none;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   background: #E9EBF0;
   color: #555;
@@ -152,8 +125,11 @@ body {
   background: #007aff;
   color: #fff;
 }
+.tab-btn.zodiac.active {
+  background: #13a662;
+  color: #fff;
+}
 
-/* 历史 */
 .history-item {
   padding: 14px 0;
   border-bottom: 1px solid #F0F0F5;
@@ -177,19 +153,18 @@ body {
   margin-top: 10px;
 }
 
-/* 筛选栏 */
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
 .filter-select, .filter-input, .filter-btn {
   border: 1px solid #E5E7EB;
   border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 14px;
+  padding: 10px 8px;
+  font-size: 13px;
   background: #fff;
   transition: border 0.2s;
 }
@@ -197,29 +172,22 @@ body {
   border-color: #007aff;
   outline: none;
 }
-.filter-select { flex: 1.2; }
-.filter-input { flex: 1; width: 70px; }
+.filter-select { flex: 1; min-width: 70px; }
+.filter-input { flex: 0.8; min-width: 60px; }
 .filter-btn {
   background: #007aff;
   color: #fff;
   border: none;
   cursor: pointer;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
-/* 🔥 热门结论 */
 .hot-wrap-title {
   font-size: 17px;
   font-weight: 800;
   color: #d32f2f;
   margin: 12px 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.hot-wrap-title::before {
-  content: "🔥";
-  font-size: 18px;
 }
 .hot-grid {
   display: grid;
@@ -256,7 +224,6 @@ body {
   font-size: 16px;
 }
 
-/* 📊 排行榜 - 更精致对齐 */
 .rank-box {
   margin-top: 14px;
   background: #fff;
@@ -308,7 +275,6 @@ body {
   color: #8A8A93;
 }
 
-/* 子标题 & 标签 & 展开按钮 */
 .sub-title {
   font-size: 15px;
   font-weight: 700;
@@ -343,7 +309,6 @@ body {
   background: #E0EDFF;
 }
 
-/* 统计布局 */
 .analysis-row {
   display: flex;
   flex-wrap: wrap;
@@ -402,87 +367,173 @@ body {
   color: #8A8A93;
   font-size: 14px;
 }
+
+.countdown-small {
+  text-align: center;
+  font-size: 12px;
+  color: #cf1322;
+  margin-top: 6px;
+}
+.countdown-small .num {
+  font-family: monospace;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* 生肖关联专用样式 */
+.core-conclusion {
+  background: #FFF5F5;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.conclusion-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #13a662;
+  margin-bottom: 8px;
+}
+.conclusion-item {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.data-grid-z {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.data-grid-4 {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+.data-grid-3 {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.data-item-z {
+  background: #F7F8FA;
+  border-radius: 8px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 12px;
+}
+.data-item-z.hot {
+  background: #E6F7F0;
+  color: #13a662;
+  font-weight: 700;
+}
+.data-item-z.cold {
+  background: #FFF2F0;
+  color: #d32f2f;
+  font-weight: 700;
+}
+.data-item-z.warm {
+  background: #FFF7E6;
+  color: #fa8c16;
+}
+.follow-table-z {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 8px;
+}
+.follow-table-z th, .follow-table-z td {
+  border: 1px solid #E5E7EB;
+  padding: 6px 4px;
+  text-align: center;
+}
+.follow-table-z th {
+  background: #F7F8FA;
+  font-weight: 700;
+}
+.final-recommend-z {
+  background: #E6F7F0;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #13a662;
+  margin-top: 10px;
+  word-break: break-all;
+  line-height: 1.6;
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1 class="page-title">🇲🇴 實時開獎直播</h1>
-  <!-- 倒计时 -->
-  <div class="card timer-card">
-    <div class="timer-row">
-      <div class="timer-text">距離下期開獎還有</div>
-      <div class="timer-count" id="countdown">00:00:00</div>
-    </div>
-  </div>
-  <!-- 最新开奖 -->
+
+  <!-- 最新开奖 + 倒计时模块 -->
   <div class="card latest-card">
-    <div class="latest-info">第 <span id="curExpect">--</span> 期開獎結果</div>
+    <div style="text-align:center; margin-bottom:12px;">
+      <div style="font-size:15px; color:#967341;">第 <span id="curExpect">--</span> 期开奖结果</div>
+      <div class="countdown-small">
+        距离下期开奖还有 <span class="num" id="countdown">00:00:00</span>
+      </div>
+    </div>
     <div class="ball-group" id="latestBalls"></div>
-    <div class="latest-time" id="curTime">開獎時間：--</div>
   </div>
-  <!-- 标签 -->
+
+  <!-- 标签栏 -->
   <div class="tab-bar">
-    <button class="tab-btn active" id="tabHistory">歷史記錄</button>
-    <button class="tab-btn analyze" id="tabAnalysis">全維度分析</button>
+    <button class="tab-btn active" id="tabHistory">历史记录</button>
+    <button class="tab-btn analyze" id="tabAnalysis">全维度分析</button>
+    <button class="tab-btn zodiac" id="tabZodiac">特码生肖关联</button>
   </div>
-  <!-- 历史 -->
+
+  <!-- 1. 历史记录模块 -->
   <div class="tab-panel active" id="historyPanel">
     <div class="card">
-      <div class="card-title">年度歷史記錄</div>
-      <div id="historyList">加載中...</div>
-      <div id="loadMore" class="load-more" style="display:none;">點擊載入更多</div>
+      <div class="card-title-row">
+        <div class="card-title">历史记录</div>
+        <button class="refresh-btn" onclick="refreshHistory()">刷新历史</button>
+      </div>
+      <div id="historyList">加载中...</div>
+      <div id="loadMore" class="load-more" style="display:none;">点击加载更多</div>
     </div>
   </div>
-  <!-- 全维度分析 + 生肖置顶 + 全排行 + 头数含0 -->
+
+  <!-- 2. 全维度分析模块 -->
   <div class="tab-panel" id="analysisPanel">
     <div class="card">
-      <div class="card-title">特碼全維度統計</div>
+      <div class="card-title">特码全维度统计</div>
       <div class="filter-bar">
         <select id="analyzeSelect" class="filter-select">
           <option value="10">最近10期</option>
           <option value="20">最近20期</option>
-          <option value="30">最近30期</option>
-          <option value="all">全年數據</option>
+          <option value="30" selected>最近30期</option>
+          <option value="all">全年数据</option>
         </select>
-        <input type="number" id="customNum" class="filter-input" placeholder="自定義">
-        <button class="filter-btn" id="filterBtn">確認</button>
+        <input type="number" id="customNum" class="filter-input" placeholder="自定义期数">
+        <button class="filter-btn" onclick="syncAnalyze()">确认</button>
       </div>
 
-      <div class="empty-tip" id="emptyTip">暫無數據可分析</div>
-
-      <!-- 🔥 熱門結論 -->
+      <div class="empty-tip" id="emptyTip">暂无数据可分析</div>
       <div id="hotWrap" style="display:none;">
-        <div class="hot-wrap-title">熱門結論</div>
+        <div class="hot-wrap-title">热门结论</div>
         <div class="hot-grid">
-          <div class="hot-card"><div class="label">核心形態</div><div class="value" id="hotShape">--</div></div>
-          <div class="hot-card"><div class="label">熱門生肖</div><div class="value" id="hotZodiac">--</div></div>
-          <div class="hot-card"><div class="label">最熱頭/尾數</div><div class="value" id="hotHeadTail">--</div></div>
+          <div class="hot-card"><div class="label">核心形态</div><div class="value" id="hotShape">--</div></div>
+          <div class="hot-card"><div class="label">热门生肖</div><div class="value" id="hotZodiac">--</div></div>
+          <div class="hot-card"><div class="label">最热头/尾数</div><div class="value" id="hotHeadTail">--</div></div>
           <div class="hot-card"><div class="label">波色/五行</div><div class="value" id="hotColorWx">--</div></div>
-          <div class="hot-card full"><div class="label">遺漏總結</div><div class="value" id="hotMiss">--</div></div>
+          <div class="hot-card full"><div class="label">遗漏总结</div><div class="value" id="hotMiss">--</div></div>
         </div>
       </div>
 
-      <!-- ====================================== -->
-      <!-- ✅ 【生肖熱門 置顶】放在最上方 -->
-      <!-- ====================================== -->
-      <div class="sub-title">
-        <span>生肖統計 <span class="hot-tag">熱門TOP</span></span>
-      </div>
+      <div class="sub-title"><span>生肖统计 <span class="hot-tag">热门TOP</span></span></div>
       <div class="item-full" style="text-align:left;line-height:1.6;display:block;">
-        熱門生肖 → <span id="hotZodiac2" style="color:#d32f2f;font-weight:700;">--</span>
+        热门生肖 → <span id="hotZodiac2" style="color:#d32f2f;font-weight:700;">--</span>
       </div>
-      <div id="zodiacRank" class="rank-box" style="background:#F9FAFC; border-radius:12px; padding:12px;"></div>
+      <div id="zodiacRank" class="rank-box"></div>
 
-      <!-- 1.單雙&大小 + 排行 -->
       <div class="sub-title">
-        <span>單雙 & 大小 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail1')">展開詳情</button>
+        <span>单双 & 大小 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail1')">展开详情</button>
       </div>
-      <div class="item-full">熱門 → <span id="hotShape2">--</span></div>
+      <div class="item-full">热门 → <span id="hotShape2">--</span></div>
       <div class="detail-box" id="detail1">
         <div class="analysis-grid">
-          <div class="analysis-item"><div class="label">單數</div><div class="value" id="odd">--</div></div>
-          <div class="analysis-item"><div class="label">雙數</div><div class="value" id="even">--</div></div>
+          <div class="analysis-item"><div class="label">单数</div><div class="value" id="odd">--</div></div>
+          <div class="analysis-item"><div class="label">双数</div><div class="value" id="even">--</div></div>
           <div class="analysis-item"><div class="label">大(≥25)</div><div class="value" id="big">--</div></div>
           <div class="analysis-item"><div class="label">小(&lt;25)</div><div class="value" id="small">--</div></div>
         </div>
@@ -490,12 +541,11 @@ body {
         <div id="bigSmallRank" class="rank-box"></div>
       </div>
 
-      <!-- 2.區間 + 排行 -->
       <div class="sub-title">
-        <span>區間統計 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail2')">展開詳情</button>
+        <span>区间统计 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail2')">展开详情</button>
       </div>
-      <div class="item-full">熱門區間 → <span id="hotRange2">--</span></div>
+      <div class="item-full">热门区间 → <span id="hotRange2">--</span></div>
       <div class="detail-box" id="detail2">
         <div class="analysis-row">
           <div class="analysis-item"><div class="label">1-9</div><div class="value" id="r1">--</div></div>
@@ -507,55 +557,51 @@ body {
         <div id="rangeRank" class="rank-box"></div>
       </div>
 
-      <!-- 3.頭數 + 排行 ✅ 包含 0 -->
       <div class="sub-title">
-        <span>頭數統計 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail3')">展開詳情</button>
+        <span>头数统计 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail3')">展开详情</button>
       </div>
-      <div class="item-full">熱門頭數 → <span id="hotHead2">--</span></div>
+      <div class="item-full">热门头数 → <span id="hotHead2">--</span></div>
       <div class="detail-box" id="detail3">
         <div class="analysis-row">
-          <div class="analysis-item"><div class="label">頭0</div><div class="value" id="h0">--</div></div>
-          <div class="analysis-item"><div class="label">頭1</div><div class="value" id="h1">--</div></div>
-          <div class="analysis-item"><div class="label">頭2</div><div class="value" id="h2">--</div></div>
-          <div class="analysis-item"><div class="label">頭3</div><div class="value" id="h3">--</div></div>
-          <div class="analysis-item"><div class="label">頭4</div><div class="value" id="h4">--</div></div>
+          <div class="analysis-item"><div class="label">头0</div><div class="value" id="h0">--</div></div>
+          <div class="analysis-item"><div class="label">头1</div><div class="value" id="h1">--</div></div>
+          <div class="analysis-item"><div class="label">头2</div><div class="value" id="h2">--</div></div>
+          <div class="analysis-item"><div class="label">头3</div><div class="value" id="h3">--</div></div>
+          <div class="analysis-item"><div class="label">头4</div><div class="value" id="h4">--</div></div>
         </div>
         <div id="headRank" class="rank-box"></div>
       </div>
 
-      <!-- 4.尾數 + 排行 -->
       <div class="sub-title">
-        <span>尾數統計 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail4')">展開詳情</button>
+        <span>尾数统计 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail4')">展开详情</button>
       </div>
-      <div class="item-full">熱門尾數 → <span id="hotTail2">--</span></div>
+      <div class="item-full">热门尾数 → <span id="hotTail2">--</span></div>
       <div class="detail-box" id="detail4">
         <div class="analysis-row" id="tailRow"></div>
         <div id="tailRank" class="rank-box"></div>
       </div>
 
-      <!-- 5.波色 + 排行 -->
       <div class="sub-title">
-        <span>波色統計 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail5')">展開詳情</button>
+        <span>波色统计 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail5')">展开详情</button>
       </div>
-      <div class="item-full">熱門波色 → <span id="hotColor2">--</span></div>
+      <div class="item-full">热门波色 → <span id="hotColor2">--</span></div>
       <div class="detail-box" id="detail5">
         <div class="analysis-row">
-          <div class="analysis-item"><div class="label">紅</div><div class="value" id="cRed">--</div></div>
-          <div class="analysis-item"><div class="label">藍</div><div class="value" id="cBlue">--</div></div>
-          <div class="analysis-item"><div class="label">綠</div><div class="value" id="cGreen">--</div></div>
+          <div class="analysis-item"><div class="label">红波</div><div class="value" id="cRed">--</div></div>
+          <div class="analysis-item"><div class="label">蓝波</div><div class="value" id="cBlue">--</div></div>
+          <div class="analysis-item"><div class="label">绿波</div><div class="value" id="cGreen">--</div></div>
         </div>
         <div id="colorRank" class="rank-box"></div>
       </div>
 
-      <!-- 6.五行 + 排行 -->
       <div class="sub-title">
-        <span>五行統計 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail6')">展開詳情</button>
+        <span>五行统计 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail6')">展开详情</button>
       </div>
-      <div class="item-full">熱門五行 → <span id="hotWuxing2">--</span></div>
+      <div class="item-full">热门五行 → <span id="hotWuxing2">--</span></div>
       <div class="detail-box" id="detail6">
         <div class="analysis-row">
           <div class="analysis-item"><div class="label">金</div><div class="value" id="wJin">--</div></div>
@@ -567,84 +613,157 @@ body {
         <div id="wuxingRank" class="rank-box"></div>
       </div>
 
-      <!-- 7.家禽野獸 + 排行 -->
       <div class="sub-title">
-        <span>家禽/野獸 <span class="hot-tag">熱門</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail7')">展開詳情</button>
+        <span>家禽/野兽 <span class="hot-tag">热门</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail7')">展开详情</button>
       </div>
-      <div class="item-full">熱門 → <span id="hotAnimal">--</span></div>
+      <div class="item-full">热门 → <span id="hotAnimal">--</span></div>
       <div class="detail-box" id="detail7">
         <div class="analysis-grid">
           <div class="analysis-item"><div class="label">家禽</div><div class="value" id="aniHome">--</div></div>
-          <div class="analysis-item"><div class="label">野獸</div><div class="value" id="aniWild">--</div></div>
+          <div class="analysis-item"><div class="label">野兽</div><div class="value" id="aniWild">--</div></div>
         </div>
         <div id="animalRank" class="rank-box"></div>
       </div>
 
-      <!-- 8.遺漏統計 -->
       <div class="sub-title">
-        <span>遺漏統計 <span class="hot-tag">公式版</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail8')">展開詳情</button>
+        <span>遗漏统计 <span class="hot-tag">公式版</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail8')">展开详情</button>
       </div>
-      <div class="item-full">熱號/溫號/冷號 → <span id="hotColdTip">--</span></div>
+      <div class="item-full">热号/温号/冷号 → <span id="hotColdTip">--</span></div>
       <div class="detail-box" id="detail8">
         <div class="analysis-grid">
-          <div class="analysis-item"><div class="label">當前遺漏</div><div class="value" id="missCur">--</div></div>
-          <div class="analysis-item"><div class="label">平均遺漏</div><div class="value" id="missAvg">--</div></div>
-          <div class="analysis-item"><div class="label">最大遺漏</div><div class="value" id="missMax">--</div></div>
-          <div class="analysis-item"><div class="label">熱號數量</div><div class="value" id="missHot">--</div></div>
-          <div class="analysis-item"><div class="label">溫號數量</div><div class="value" id="missWarm">--</div></div>
-          <div class="analysis-item"><div class="label">冷號數量</div><div class="value" id="missCold">--</div></div>
+          <div class="analysis-item"><div class="label">当前最大遗漏</div><div class="value" id="missCur">--</div></div>
+          <div class="analysis-item"><div class="label">平均遗漏</div><div class="value" id="missAvg">--</div></div>
+          <div class="analysis-item"><div class="label">历史最大遗漏</div><div class="value" id="missMax">--</div></div>
+          <div class="analysis-item"><div class="label">热号数量</div><div class="value" id="missHot">--</div></div>
+          <div class="analysis-item"><div class="label">温号数量</div><div class="value" id="missWarm">--</div></div>
+          <div class="analysis-item"><div class="label">冷号数量</div><div class="value" id="missCold">--</div></div>
         </div>
       </div>
 
-      <!-- 9.連出統計 -->
       <div class="sub-title">
-        <span>連出統計 <span class="hot-tag">公式版</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail9')">展開詳情</button>
+        <span>连出统计 <span class="hot-tag">公式版</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail9')">展开详情</button>
       </div>
-      <div class="item-full">當前/最長連出 → <span id="streakTip">--</span></div>
+      <div class="item-full">当前/最长连出 → <span id="streakTip">--</span></div>
       <div class="detail-box" id="detail9">
         <div class="analysis-grid">
-          <div class="analysis-item"><div class="label">當前連出</div><div class="value" id="streakCur">--</div></div>
-          <div class="analysis-item"><div class="label">最長連出</div><div class="value" id="streakMax">--</div></div>
+          <div class="analysis-item"><div class="label">当前连出</div><div class="value" id="streakCur">--</div></div>
+          <div class="analysis-item"><div class="label">最长连出</div><div class="value" id="streakMax">--</div></div>
         </div>
       </div>
 
-      <!-- 綜合熱門號碼 -->
-      <div class="sub-title" style="color:#d32f2f">綜合熱門號碼</div>
-      <div class="item-full">
-        特碼熱門TOP5 → <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span>
-      </div>
-      <div style="font-size:12px;color:#8A8A93;margin-top:14px;">點擊展開查看完整統計+排行</div>
+      <div class="sub-title" style="color:#d32f2f">综合热门特码</div>
+      <div class="item-full">特码热门TOP5 → <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span></div>
     </div>
   </div>
+
+  <!-- 3. 特码生肖关联模块（新增数量选择器） -->
+  <div class="tab-panel" id="zodiacAnalysisPanel">
+    <div class="card">
+      <div class="card-title-row">
+        <div class="card-title" style="color:#13a662;">特码生肖·尾数关联</div>
+      </div>
+      <!-- 新增：期数+号码数量双筛选栏 -->
+      <div class="filter-bar">
+        <select id="zodiacAnalyzeSelect" class="filter-select">
+          <option value="10">最近10期</option>
+          <option value="20">最近20期</option>
+          <option value="30" selected>最近30期</option>
+          <option value="all">全年数据</option>
+        </select>
+        <input type="number" id="zodiacCustomNum" class="filter-input" placeholder="自定义期数">
+        <!-- 新增：号码数量选择器 -->
+        <select id="numCountSelect" class="filter-select">
+          <option value="5" selected>5个号</option>
+          <option value="10">10个号</option>
+          <option value="15">15个号</option>
+          <option value="20">20个号</option>
+          <option value="custom">自定义</option>
+        </select>
+        <input type="number" id="customNumCount" class="filter-input" placeholder="自定义数量" style="display:none;">
+        <button class="filter-btn" onclick="syncZodiacAnalyze()">确认</button>
+      </div>
+
+      <div class="empty-tip" id="zodiacEmptyTip">暂无开奖历史数据</div>
+      <div id="zodiacContent" style="display:none;">
+        <div class="core-conclusion">
+          <div class="conclusion-title">🔥 特码真实共振组合</div>
+          <div class="conclusion-item" id="combo1">1. 首选：--</div>
+          <div class="conclusion-item" id="combo2">2. 次选：--</div>
+          <div class="conclusion-item" id="combo3">3. 备选：--</div>
+        </div>
+
+        <div class="sub-title" style="color:#13a662;">① 特码尾数 → 特码生肖真实关联</div>
+        <div class="data-grid-z" id="tailZodiacGrid"></div>
+
+        <div class="sub-title" style="color:#13a662;">② 上期特码生肖 → 本期特码生肖跟随</div>
+        <table class="follow-table-z" id="zodiacFollowTable"></table>
+
+        <div class="sub-title" style="color:#13a662;">③ 12生肖特码冷热统计</div>
+        <div class="data-grid-z data-grid-4" id="zodiacTotalGrid"></div>
+
+        <div class="sub-title" style="color:#13a662;">④ 高遗漏生肖（反弹关注）</div>
+        <div class="data-grid-z data-grid-3" id="zodiacMissGrid"></div>
+
+        <div class="final-recommend-z" id="zodiacFinalNum">✅ 精选特码：--</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// ======================================
-// 配置 & 接口（使用你指定的歷史接口）
-// ======================================
+// ===================== 全局常量 & 工具函数（生肖全简体）=====================
 const API = {
-  latest: 'https://macaumarksix.com/api/macaujc2.com',
   history: 'https://history.macaumarksix.com/history/macaujc2/y/'
 };
 const YEAR = new Date().getFullYear();
-let historyData = [];
-let analyzeLimit = 10;
-let showCount = 20;
-const pad = n => String(n).padStart(2, '0');
+// 所有生肖常量100%使用简体汉字
+const zodiacAll = ["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
+const homeZodiac = ['鼠','牛','兔','马','羊','鸡','狗','猪'];
+const wildZodiac = ['虎','龙','蛇','猴'];
+// 繁体→简体生肖映射表，自动兼容API返回的繁体
+const zodiacTradToSimp = {
+  '鼠': '鼠', '牛': '牛', '虎': '虎', '兔': '兔',
+  '龍': '龙', '龙': '龙', '蛇': '蛇', '馬': '马', '马': '马',
+  '羊': '羊', '猴': '猴', '雞': '鸡', '鸡': '鸡', '狗': '狗',
+  '豬': '猪', '猪': '猪'
+};
+
 const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
 
-// 折叠切换
-function toggleDetail(id) {
-  const el = $(id);
-  const btn = el.previousElementSibling.querySelector('.toggle-btn');
-  el.style.display = el.style.display === 'block' ? 'none' : 'block';
-  btn.textContent = el.style.display === 'block' ? '收起詳情' : '展開詳情';
-}
+// 安全取值
+const getVal = (obj, path, def = '') => {
+  return path.split('.').reduce((o, k) => (o || {})[k], obj) ?? def;
+};
 
-// 基礎映射
+// 【核心】仅取第7位特码信息，自动将生肖转为简体
+const getSpecial = item => {
+  const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
+  const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
+  const zodArrRaw = getVal(item, 'zodiac', ',,,,,,,,,,,,').split(',');
+  // 自动将所有生肖转为简体
+  const zodArr = zodArrRaw.map(z => zodiacTradToSimp[z] || z);
+  const te = Math.max(0, Number(codeArr[6]));
+  return {
+    te,
+    tail: te % 10,
+    head: Math.floor(te / 10),
+    wave: waveArr[6],
+    zod: zodArr[6] || '-',
+    odd: te % 2 === 1,
+    big: te >= 25,
+    animal: homeZodiac.includes(zodArr[6]) ? '家禽' : '野兽',
+    wuxing: getWuxing(te),
+    // 完整简体生肖数组，用于历史记录渲染
+    fullZodArr: zodArr
+  };
+};
+
+// 五行标准规则
 const getWuxing = n => {
   const m = n % 10;
   if ([0,5].includes(m)) return '金';
@@ -653,132 +772,154 @@ const getWuxing = n => {
   if ([3,8].includes(m)) return '火';
   return '土';
 };
-const getAnimal = zod => {
-  const home = ['鼠','牛','兔','馬','羊','雞','狗','豬'];
-  return home.includes(zod) ? '家禽' : '野獸';
+
+// 生肖冷热等级标准
+const getZodiacLevel = (count, miss, total) => {
+  const avgCount = total / 12;
+  if (count >= avgCount * 1.5 && miss <= 3) return { cls: 'hot', text: '热' };
+  if (count <= avgCount * 0.5 || miss >= 8) return { cls: 'cold', text: '冷' };
+  return { cls: 'warm', text: '温' };
 };
 
-// 遺漏公式
-function calcMiss(list) {
-  const T = list.length;
-  const lastAppear = {};
-  for (let m = 1; m <= 49; m++) lastAppear[m] = -1;
-  list.forEach((item, idx) => {
-    const te = Number(item.openCode.split(',')[6]);
-    lastAppear[te] = idx;
-  });
-  let totalMissSum = 0, maxMiss = 0, hot = 0, warm = 0, cold = 0;
-  const allMiss = [];
-  for (let m = 1; m <= 49; m++) {
-    const p = lastAppear[m];
-    let currentMiss = p >= 1 ? p : T;
-    allMiss.push(currentMiss);
-    totalMissSum += currentMiss;
-    if (currentMiss > maxMiss) maxMiss = currentMiss;
-    if (currentMiss >= 0 && currentMiss <= 3) hot++;
-    else if (currentMiss >= 4 && currentMiss <= 9) warm++;
-    else cold++;
-  }
-  const cValid = Object.values(lastAppear).filter(v => v !== -1).length;
-  const avgMiss = cValid === 0 ? '-' : (totalMissSum / 49).toFixed(1);
-  const curMiss = Math.max(...allMiss);
-  return { curMiss, avgMiss, maxMiss, hot, warm, cold };
-}
-
-// 連出公式
-function calcStreak(list) {
-  if (!list.length) return { cur: 0, max: 0 };
-  const getShape = te => {
-    const odd = te % 2 === 1;
-    const big = te >= 25;
-    return `${odd}_${big}`;
-  };
-  let curStreak = 1;
-  const firstShape = getShape(Number(list[0].openCode.split(',')[6]));
-  for (let i = 1; i < list.length; i++) {
-    const s = getShape(Number(list[i].openCode.split(',')[6]));
-    if (s === firstShape) curStreak++;
-    else break;
-  }
-  let maxStreak = 1, current = 1;
-  let prevShape = getShape(Number(list[0].openCode.split(',')[6]));
-  for (let i = 1; i < list.length; i++) {
-    const te = Number(list[i].openCode.split(',')[6]);
-    const s = getShape(te);
-    if (s === prevShape) {
-      current++;
-      if (current > maxStreak) maxStreak = current;
-    } else {
-      current = 1;
-      prevShape = s;
-    }
-  }
-  return { cur: curStreak, max: maxStreak };
-}
-
-// 工具函數
-function buildBall(num, color, zodiac, size=38, fs=17){
-  return `<div class="ball-item" style="min-width:${size}px;">
-    <div class="ball ${color}" style="width:${size}px;height:${size}px;font-size:${fs}px;">${num}</div>
-    <div class="ball-zodiac" style="font-size:12px;">${zodiac}</div>
-  </div>`;
-}
-function getHot(arr){
-  return arr.sort((a,b)=>b[1]-a[1]).slice(0,2).map(i=>i[0]).join(' / ');
-}
-
-// 📊 統一排行榜渲染
-function renderRank(containerId, obj, total) {
-  if(total === 0) { $(containerId).innerHTML = ''; return; }
-  const sorted = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
-  let html = `<div class="rank-header">
+// 完整排行渲染
+const renderFullRank = (containerId, dataObj, total) => {
+  if (total === 0) { $(containerId).innerHTML = ''; return; }
+  const sorted = Object.entries(dataObj).sort((a, b) => b[1] - a[1]);
+  let html = `
+  <div class="rank-header">
     <div class="rank-no">名次</div>
-    <div class="rank-name">分類</div>
-    <div class="rank-count">次數</div>
+    <div class="rank-name">分类</div>
+    <div class="rank-count">次数</div>
     <div class="rank-rate">占比</div>
-    <div class="rank-miss">遺漏</div>
+    <div class="rank-miss">遗漏</div>
   </div>`;
-  sorted.forEach(([name, cnt], i) => {
-    const rate = ((cnt/total)*100).toFixed(0)+'%';
-    const miss = cnt>0 ? ((total-cnt)/cnt).toFixed(1) : total;
-    html += `<div class="rank-row">
-      <div class="rank-no">${i+1}</div>
+  sorted.forEach(([name, count], idx) => {
+    const rate = ((count / total) * 100).toFixed(0) + '%';
+    const miss = count > 0 ? Math.floor((total - count) / count) : total;
+    html += `
+    <div class="rank-row">
+      <div class="rank-no">${idx + 1}</div>
       <div class="rank-name">${name}</div>
-      <div class="rank-count">${cnt}</div>
+      <div class="rank-count">${count}</div>
       <div class="rank-rate">${rate}</div>
       <div class="rank-miss">${miss}</div>
     </div>`;
   });
   $(containerId).innerHTML = html;
+};
+
+// 热门值获取
+const getTopHot = (arr, limit = 2) => {
+  return arr.sort((a, b) => b[1] - a[1]).slice(0, limit).map(i => i[0]).join(' / ');
+};
+
+// ===================== 全局状态 =====================
+let state = {
+  historyData: [],
+  analyzeLimit: 30,
+  selectedNumCount: 5, // 新增：精选特码数量，默认5个
+  showCount: 20,
+  autoRefreshTimer: null
+};
+
+// ===================== 全维度分析计算&渲染（统一规则：数组前=最新）=====================
+function calcFullAnalysis() {
+  const { historyData, analyzeLimit } = state;
+  if (!historyData.length) return null;
+
+  // 严格遵循：slice(0, limit) 取最新的limit期，数组0=最新
+  const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
+  const total = list.length;
+
+  // 初始化统计对象
+  const singleDouble = { 单: 0, 双: 0 };
+  const bigSmall = { 大: 0, 小: 0 };
+  const range = { '1-9': 0, '10-19': 0, '20-29': 0, '30-39': 0, '40-49': 0 };
+  const head = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+  const tail = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+  const color = { 红: 0, 蓝: 0, 绿: 0 };
+  const wuxing = { 金: 0, 木: 0, 水: 0, 火: 0, 土: 0 };
+  const animal = { 家禽: 0, 野兽: 0 };
+  const zodiac = {}; zodiacAll.forEach(z => zodiac[z] = 0);
+  const numCount = {}; for (let i = 1; i <= 49; i++) numCount[pad(i)] = 0;
+  const lastAppear = {}; for (let i = 1; i <= 49; i++) lastAppear[i] = -1;
+
+  // 循环统计：从最新到旧遍历，仅第一次出现记录索引（最新位置）
+  list.forEach((item, idx) => {
+    const s = getSpecial(item);
+    s.odd ? singleDouble.单++ : singleDouble.双++;
+    s.big ? bigSmall.大++ : bigSmall.小++;
+    s.te <= 9 ? range['1-9']++ : s.te <= 19 ? range['10-19']++ : s.te <= 29 ? range['20-29']++ : s.te <= 39 ? range['30-39']++ : range['40-49']++;
+    head[s.head]++; tail[s.tail]++;
+    s.wave === 'red' ? color.红++ : s.wave === 'blue' ? color.蓝++ : color.绿++;
+    wuxing[s.wuxing]++; animal[s.animal]++;
+    if (zodiacAll.includes(s.zod)) zodiac[s.zod]++;
+    numCount[pad(s.te)]++;
+    if (lastAppear[s.te] === -1) lastAppear[s.te] = idx;
+  });
+
+  // 遗漏计算
+  let totalMissSum = 0, maxMiss = 0, hot = 0, warm = 0, cold = 0;
+  const allMiss = [];
+  for (let m = 1; m <= 49; m++) {
+    const p = lastAppear[m];
+    const currentMiss = p === -1 ? total : p;
+    allMiss.push(currentMiss);
+    totalMissSum += currentMiss;
+    if (currentMiss > maxMiss) maxMiss = currentMiss;
+    if (currentMiss <= 3) hot++;
+    else if (currentMiss <= 9) warm++;
+    else cold++;
+  }
+  const avgMiss = (totalMissSum / 49).toFixed(1);
+  const curMaxMiss = Math.max(...allMiss);
+
+  // 连出计算：从最新到旧判断
+  let curStreak = 1, maxStreak = 1, current = 1;
+  if (list.length >= 2) {
+    const firstShape = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
+    for (let i = 1; i < list.length; i++) {
+      const s = getSpecial(list[i]);
+      const shape = `${s.odd}_${s.big}`;
+      if (shape === firstShape) curStreak++;
+      else break;
+    }
+    let prevShape = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
+    for (let i = 1; i < list.length; i++) {
+      const s = getSpecial(list[i]);
+      const shape = `${s.odd}_${s.big}`;
+      if (shape === prevShape) {
+        current++;
+        if (current > maxStreak) maxStreak = current;
+      } else {
+        current = 1;
+        prevShape = shape;
+      }
+    }
+  }
+
+  // 热门排序
+  const hotSD = Object.entries(singleDouble).sort((a, b) => b[1] - a[1])[0];
+  const hotBS = Object.entries(bigSmall).sort((a, b) => b[1] - a[1])[0];
+  const hotHead = Object.entries(head).sort((a, b) => b[1] - a[1])[0];
+  const hotTail = Object.entries(tail).sort((a, b) => b[1] - a[1])[0];
+  const hotColor = Object.entries(color).sort((a, b) => b[1] - a[1])[0];
+  const hotWx = Object.entries(wuxing).sort((a, b) => b[1] - a[1])[0];
+  const hotZod = Object.entries(zodiac).sort((a, b) => b[1] - a[1]).slice(0, 3).map(i => i[0]).join('、');
+  const hotAni = Object.entries(animal).sort((a, b) => b[1] - a[1])[0];
+  const hotNum = Object.entries(numCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(i => i[0]).join(' ');
+
+  return {
+    total, singleDouble, bigSmall, range, head, tail, color, wuxing, animal, zodiac, numCount,
+    hotSD, hotBS, hotHead, hotTail, hotColor, hotWx, hotZod, hotAni, hotNum,
+    miss: { curMaxMiss, avgMiss, maxMiss, hot, warm, cold },
+    streak: { curStreak, maxStreak }
+  };
 }
 
-// 渲染最新
-function renderLatest(item){
-  $('curExpect').innerText = item.expect;
-  $('curTime').innerText = `開獎時間：${item.openTime}`;
-  const n=item.openCode.split(','),c=item.wave.split(','),z=item.zodiac.split(',');
-  let html=''; for(let i=0;i<6;i++)html+=buildBall(n[i],c[i],z[i]);
-  html+='<div class="ball-sep">+</div>'+buildBall(n[6],c[6],z[6]);
-  $('latestBalls').innerHTML=html;
-}
-
-// 渲染歷史
-function renderHistory(){
-  const list=historyData.slice(0,showCount);
-  if(!list.length){$('historyList').innerHTML='<div style="padding:20px">暫無數據</div>';return;}
-  $('historyList').innerHTML=list.map(item=>{
-    const n=item.openCode.split(','),c=item.wave.split(','),z=item.zodiac.split(',');
-    let b=''; for(let i=0;i<6;i++)b+=buildBall(n[i],c[i],z[i],32,15);
-    b+='<div class="ball-sep">+</div>'+buildBall(n[6],c[6],z[6],32,15);
-    return `<div class="history-item"><div class="history-expect">第${item.expect}期</div>
-      <div class="ball-group">${b}</div></div>`;
-  }).join('');
-}
-
-// 渲染分析（已修改：頭數含0 + 生肖置顶 + 全排行）
-function renderAnalysis(){
-  if(!historyData.length){
-    document.querySelectorAll('.value').forEach(e=>e.innerText='--');
+function renderFullAnalysis() {
+  const data = calcFullAnalysis();
+  if (!data) {
     $('hotWrap').style.display = 'none';
     $('emptyTip').style.display = 'block';
     return;
@@ -786,154 +927,504 @@ function renderAnalysis(){
   $('hotWrap').style.display = 'block';
   $('emptyTip').style.display = 'none';
 
-  const realLimit = Math.min(analyzeLimit, historyData.length);
-  const list = historyData.slice(0, realLimit);
+  // 热门卡片赋值
+  $('hotShape').innerText = `${data.hotSD[0]} / ${data.hotBS[0]}`;
+  $('hotZodiac').innerText = data.hotZod;
+  $('hotHeadTail').innerText = `${data.hotHead[0]}头 / ${data.hotTail[0]}尾`;
+  $('hotColorWx').innerText = `${data.hotColor[0]} / ${data.hotWx[0]}`;
+  $('hotMiss').innerText = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold} | 最大遗漏:${data.miss.maxMiss}期`;
+
+  // 基础数值赋值
+  $('odd').innerText = data.singleDouble.单;
+  $('even').innerText = data.singleDouble.双;
+  $('big').innerText = data.bigSmall.大;
+  $('small').innerText = data.bigSmall.小;
+  $('r1').innerText = data.range['1-9'];
+  $('r2').innerText = data.range['10-19'];
+  $('r3').innerText = data.range['20-29'];
+  $('r4').innerText = data.range['30-39'];
+  $('r5').innerText = data.range['40-49'];
+  $('h0').innerText = data.head[0];
+  $('h1').innerText = data.head[1];
+  $('h2').innerText = data.head[2];
+  $('h3').innerText = data.head[3];
+  $('h4').innerText = data.head[4];
+  $('cRed').innerText = data.color.红;
+  $('cBlue').innerText = data.color.蓝;
+  $('cGreen').innerText = data.color.绿;
+  $('wJin').innerText = data.wuxing.金;
+  $('wMu').innerText = data.wuxing.木;
+  $('wShui').innerText = data.wuxing.水;
+  $('wHuo').innerText = data.wuxing.火;
+  $('wTu').innerText = data.wuxing.土;
+  $('aniHome').innerText = data.animal.家禽;
+  $('aniWild').innerText = data.animal.野兽;
+
+  // 热门展示
+  $('hotShape2').innerText = getTopHot(Object.entries(data.singleDouble).concat(Object.entries(data.bigSmall)));
+  $('hotRange2').innerText = getTopHot(Object.entries(data.range));
+  $('hotHead2').innerText = getTopHot(Object.entries(data.head));
+  $('hotTail2').innerText = getTopHot(Object.entries(data.tail));
+  $('hotColor2').innerText = getTopHot(Object.entries(data.color));
+  $('hotWuxing2').innerText = getTopHot(Object.entries(data.wuxing));
+  $('hotAnimal').innerText = getTopHot(Object.entries(data.animal));
+  $('hotZodiac2').innerText = Object.entries(data.zodiac).sort((a, b) => b[1] - a[1]).slice(0, 5).map(i => `${i[0]}(${i[1]})`).join(' ');
+  $('hotNumber').innerText = data.hotNum;
+
+  // 遗漏&连出
+  $('missCur').innerText = data.miss.curMaxMiss;
+  $('missAvg').innerText = data.miss.avgMiss;
+  $('missMax').innerText = data.miss.maxMiss;
+  $('missHot').innerText = data.miss.hot;
+  $('missWarm').innerText = data.miss.warm;
+  $('missCold').innerText = data.miss.cold;
+  $('hotColdTip').innerText = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold}`;
+  $('streakCur').innerText = data.streak.curStreak;
+  $('streakMax').innerText = data.streak.maxStreak;
+  $('streakTip').innerText = `当前:${data.streak.curStreak}期 最长:${data.streak.maxStreak}期`;
+
+  // 尾数行渲染
+  let tailHtml = '';
+  for (let t = 0; t <= 9; t++) {
+    tailHtml += `<div class="analysis-item"><div class="label">尾${t}</div><div class="value">${data.tail[t]}</div></div>`;
+  }
+  $('tailRow').innerHTML = tailHtml;
+
+  // 完整排行渲染
+  renderFullRank('singleDoubleRank', data.singleDouble, data.total);
+  renderFullRank('bigSmallRank', data.bigSmall, data.total);
+  renderFullRank('rangeRank', data.range, data.total);
+  renderFullRank('headRank', data.head, data.total);
+  renderFullRank('tailRank', data.tail, data.total);
+  renderFullRank('colorRank', data.color, data.total);
+  renderFullRank('wuxingRank', data.wuxing, data.total);
+  renderFullRank('animalRank', data.animal, data.total);
+  renderFullRank('zodiacRank', data.zodiac, data.total);
+}
+
+// ===================== 特码生肖关联计算&渲染（已修改闭环精选逻辑）=====================
+function calcZodiacAnalysis() {
+  const { historyData, analyzeLimit } = state;
+  if (!historyData.length || historyData.length < 2) return null;
+
+  // 严格遵循：slice(0, limit) 取最新的limit期，数组0=最新
+  const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
   const total = list.length;
+  const avgExpect = total / 12;
 
-  // 統計對象 ✅ 頭數包含 0
-  const singleDouble={單:0,雙:0}; const bigSmall={大:0,小:0};
-  const range={ '1-9':0,'10-19':0,'20-29':0,'30-39':0,'40-49':0 };
-  const head={0:0,1:0,2:0,3:0,4:0}; const tail={0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
-  const color={紅:0,藍:0,綠:0}; const wuxing={金:0,木:0,水:0,火:0,土:0};
-  const animal={家禽:0,野獸:0}; const zodiac={}; const numCount={};
+  // 初始化统计对象
+  const zodCount = {};
+  const lastAppear = {};
+  zodiacAll.forEach(z => { zodCount[z] = 0; lastAppear[z] = -1; });
+  const tailZodMap = {}; for (let t = 0; t <= 9; t++) tailZodMap[t] = {};
+  const followMap = {};
 
-  list.forEach(item=>{
-    const nums=item.openCode.split(',').map(Number);
-    const te=nums[6]; const col=item.wave.split(',')[6]; const zod=item.zodiac.split(',')[6];
-    te%2===1 ? singleDouble.單++ : singleDouble.雙++;
-    te>=25 ? bigSmall.大++ : bigSmall.小++;
-    te<=9?range['1-9']++:te<=19?range['10-19']++:te<=29?range['20-29']++:te<=39?range['30-39']++:range['40-49']++;
-    const h=Math.floor(te/10); head[h]++; const t=te%10; tail[t]++;
-    col==='red'?color.紅++:col==='blue'?color.藍++:color.綠++;
-    const wx=getWuxing(te); wuxing[wx]++;
-    const ani=getAnimal(zod); animal[ani]++;
-    zodiac[zod]=(zodiac[zod]||0)+1;
+  // 循环统计：从最新到旧遍历，仅第一次出现记录索引（最新位置）
+  list.forEach((item, idx) => {
+    const s = getSpecial(item);
+    if (zodiacAll.includes(s.zod)) {
+      zodCount[s.zod]++;
+      if (lastAppear[s.zod] === -1) lastAppear[s.zod] = idx;
+    }
+    if (zodiacAll.includes(s.zod)) {
+      tailZodMap[s.tail][s.zod] = (tailZodMap[s.tail][s.zod] || 0) + 1;
+    }
   });
 
-  // 熱門結論
-  const hotSD = Object.entries(singleDouble).sort((a,b)=>b[1]-a[1])[0];
-  const hotBS = Object.entries(bigSmall).sort((a,b)=>b[1]-a[1])[0];
-  const hotH = Object.entries(head).sort((a,b)=>b[1]-a[1])[0];
-  const hotT = Object.entries(tail).sort((a,b)=>b[1]-a[1])[0];
-  const hotC = Object.entries(color).sort((a,b)=>b[1]-a[1])[0];
-  const hotW = Object.entries(wuxing).sort((a,b)=>b[1]-a[1])[0];
-  const hotZ = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,3).map(i=>i[0]).join('、');
-  const miss = calcMiss(list);
-
-  $('hotShape').innerText = `${hotSD[0]} / ${hotBS[0]}`;
-  $('hotZodiac').innerText = hotZ;
-  $('hotHeadTail').innerText = `${hotH[0]}頭 / ${hotT[0]}尾`;
-  $('hotColorWx').innerText = `${hotC[0]} / ${hotW[0]}`;
-  $('hotMiss').innerText = `熱:${miss.hot} 溫:${miss.warm} 冷:${miss.cold} | 最大遺漏:${miss.maxMiss}期`;
-
-  // 卡片赋值
-  $('odd').innerText=singleDouble.單; $('even').innerText=singleDouble.雙;
-  $('big').innerText=bigSmall.大; $('small').innerText=bigSmall.小;
-  $('r1').innerText=range['1-9'];$('r2').innerText=range['10-19'];$('r3').innerText=range['20-29'];
-  $('r4').innerText=range['30-39'];$('r5').innerText=range['40-49'];
-  // ✅ 頭數包含 0 渲染
-  $('h0').innerText=head[0];$('h1').innerText=head[1];$('h2').innerText=head[2];$('h3').innerText=head[3];$('h4').innerText=head[4];
-  $('cRed').innerText=color.紅;$('cBlue').innerText=color.藍;$('cGreen').innerText=color.綠;
-  $('wJin').innerText=wuxing.金;$('wMu').innerText=wuxing.木;$('wShui').innerText=wuxing.水;
-  $('wHuo').innerText=wuxing.火;$('wTu').innerText=wuxing.土;
-  $('aniHome').innerText=animal.家禽;$('aniWild').innerText=animal.野獸;
-
-  // 📊 渲染所有排行榜
-  renderRank('singleDoubleRank', singleDouble, total);
-  renderRank('bigSmallRank', bigSmall, total);
-  renderRank('rangeRank', range, total);
-  renderRank('headRank', head, total);
-  renderRank('tailRank', tail, total);
-  renderRank('colorRank', color, total);
-  renderRank('wuxingRank', wuxing, total);
-  renderRank('animalRank', animal, total);
-  renderRank('zodiacRank', zodiac, total);
-
-  // 熱門標題
-  $('hotShape2').innerText=getHot(Object.entries(singleDouble).concat(Object.entries(bigSmall)));
-  $('hotRange2').innerText=getHot(Object.entries(range));
-  $('hotHead2').innerText=getHot(Object.entries(head));
-  $('hotTail2').innerText=getHot(Object.entries(tail));
-  $('hotColor2').innerText=getHot(Object.entries(color));
-  $('hotWuxing2').innerText=getHot(Object.entries(wuxing));
-  $('hotAnimal').innerText=getHot(Object.entries(animal));
-
-  // 遺漏 & 連出
-  $('missCur').innerText=miss.curMiss;$('missAvg').innerText=miss.avgMiss;$('missMax').innerText=miss.maxMiss;
-  $('missHot').innerText=miss.hot;$('missWarm').innerText=miss.warm;$('missCold').innerText=miss.cold;
-  $('hotColdTip').innerText=`熱:${miss.hot} 溫:${miss.warm} 冷:${miss.cold}`;
-  const streak = calcStreak(list);
-  $('streakCur').innerText=streak.cur;$('streakMax').innerText=streak.max;
-  $('streakTip').innerText=`當前:${streak.cur}期 最長:${streak.max}期`;
-
-  // 生肖置顶展示
-  const hotZ2 = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>`${i[0]}(${i[1]})`).join(' ');
-  $('hotZodiac2').innerText=hotZ2||'無';
-
-  // 熱門號碼
-  for(let i=1;i<=49;i++)numCount[pad(i)]=0;
-  list.forEach(item=>{ const te=+item.openCode.split(',')[6]; numCount[pad(te)]++; });
-  const hotNum = Object.entries(numCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>i[0]).join(' ');
-  $('hotNumber').innerText=hotNum;
-
-  // 尾數渲染
-  let tailHtml=''; for(let t=0;t<=9;t++){
-    tailHtml+=`<div class="analysis-item"><div class="label">尾${t}</div><div class="value">${tail[t]}</div></div>`;
+  // 上期→本期跟随统计：上期=索引i-1，本期=索引i，正确对应新→旧
+  for (let i = 1; i < list.length; i++) {
+    const preZod = getSpecial(list[i-1]).zod;
+    const curZod = getSpecial(list[i]).zod;
+    if (zodiacAll.includes(preZod) && zodiacAll.includes(curZod)) {
+      if (!followMap[preZod]) followMap[preZod] = {};
+      followMap[preZod][curZod] = (followMap[preZod][curZod] || 0) + 1;
+    }
   }
-  $('tailRow').innerHTML=tailHtml;
+
+  // 正确的遗漏期数计算：索引越小越新，遗漏越少
+  const zodMiss = {};
+  const zodAvgMiss = {};
+  zodiacAll.forEach(z => {
+    zodMiss[z] = lastAppear[z] === -1 ? total : lastAppear[z];
+    zodAvgMiss[z] = zodCount[z] > 0 ? (total / zodCount[z]).toFixed(1) : total;
+  });
+
+  // 热门排序
+  const topZod = Object.entries(zodCount).sort((a, b) => b[1] - a[1]);
+  const topTail = Array.from({ length: 10 }, (_, t) => ({
+    t, sum: Object.values(tailZodMap[t]).reduce((a, b) => a + b, 0)
+  })).sort((a, b) => b.sum - a.sum);
+
+  return { list, total, avgExpect, zodCount, zodMiss, zodAvgMiss, tailZodMap, followMap, topZod, topTail };
 }
 
-// 事件綁定
-function bindEvents(){
-  $('tabHistory').onclick=()=>{
-    $('tabHistory').classList.add('active');$('tabAnalysis').classList.remove('active');
-    $('historyPanel').classList.add('active');$('analysisPanel').classList.remove('active');
-  };
-  $('tabAnalysis').onclick=()=>{
-    $('tabAnalysis').classList.add('active');$('tabHistory').classList.remove('active');
-    $('analysisPanel').classList.add('active');$('historyPanel').classList.remove('active');
-    renderAnalysis();
-  };
-  $('filterBtn').onclick=()=>{
-    const c=$('customNum').value.trim();
-    const s=$('analyzeSelect').value;
-    analyzeLimit = c&&!isNaN(c)&&c>0 ? +c : (s==='all'?historyData.length:+s);
-    renderAnalysis();
-  };
-  $('analyzeSelect').onchange=()=>$('customNum').value='';
-  $('loadMore').onclick=()=>{
-    showCount+=30; renderHistory();
-    if(showCount>=historyData.length)$('loadMore').style.display='none';
-  };
+function renderZodiacAnalysis() {
+  const data = calcZodiacAnalysis();
+  if (!data) {
+    $('zodiacEmptyTip').style.display = 'block';
+    $('zodiacContent').style.display = 'none';
+    return;
+  }
+  $('zodiacEmptyTip').style.display = 'none';
+  $('zodiacContent').style.display = 'block';
+
+  // 共振组合
+  $('combo1').innerText = `1. 首选：尾${data.topTail[0]?.t ?? '-'} + ${data.topZod[0]?.[0] ?? '-'}（出现${data.topZod[0]?.[1] ?? 0}次）`;
+  $('combo2').innerText = `2. 次选：尾${data.topTail[1]?.t ?? '-'} + ${data.topZod[1]?.[0] ?? '-'}（出现${data.topZod[1]?.[1] ?? 0}次）`;
+  $('combo3').innerText = `3. 备选：尾${data.topTail[2]?.t ?? '-'} + ${data.topZod[2]?.[0] ?? '-'}（出现${data.topZod[2]?.[1] ?? 0}次）`;
+
+  // 尾数→生肖网格
+  let tailHtml = '';
+  for (let t = 0; t <= 9; t++) {
+    const arr = Object.entries(data.tailZodMap[t]).sort((a, b) => b[1] - a[1]);
+    const topZ = arr.length ? arr[0][0] : '-';
+    const cnt = arr.length ? arr[0][1] : 0;
+    const level = getZodiacLevel(cnt, data.zodMiss[topZ] || 0, data.total);
+    tailHtml += `<div class="data-item-z ${level.cls}">尾${t}<br>${topZ}<br>${cnt}次</div>`;
+  }
+  $('tailZodiacGrid').innerHTML = tailHtml;
+
+  // 跟随表格
+  let followHtml = `<tr><th>上期生肖</th><th>首选(次数)</th><th>次选(次数)</th><th>排除生肖</th></tr>`;
+  const followKeys = Object.keys(data.followMap).slice(0, 4);
+  followKeys.forEach(k => {
+    const arr = Object.entries(data.followMap[k]).sort((a, b) => b[1] - a[1]);
+    const first = arr[0] ? `${arr[0][0]}(${arr[0][1]})` : '-';
+    const second = arr[1] ? `${arr[1][0]}(${arr[1][1]})` : '-';
+    const exclude = zodiacAll.filter(z => !arr.some(x => x[0] === z)).slice(0, 2).join('、');
+    followHtml += `<tr><td>${k}</td><td>${first}</td><td>${second}</td><td>${exclude || '-'}</td></tr>`;
+  });
+  $('zodiacFollowTable').innerHTML = followHtml;
+
+  // 12生肖统计
+  let zodHtml = '';
+  zodiacAll.forEach(z => {
+    const cnt = data.zodCount[z];
+    const miss = data.zodMiss[z];
+    const rate = ((cnt / data.total) * 100).toFixed(0) + '%';
+    const level = getZodiacLevel(cnt, miss, data.total);
+    zodHtml += `<div class="data-item-z ${level.cls}">${z}<br>${cnt}次/${rate}<br>遗${miss}</div>`;
+  });
+  $('zodiacTotalGrid').innerHTML = zodHtml;
+
+  // 高遗漏生肖
+  const missSort = Object.entries(data.zodMiss).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  let missHtml = '';
+  missSort.forEach(([z, m]) => {
+    const avgMiss = data.zodAvgMiss[z];
+    const tag = m > avgMiss ? '超平均' : '';
+    missHtml += `<div class="data-item-z cold">${z}<br>遗${m}期<br>${tag}</div>`;
+  });
+  $('zodiacMissGrid').innerHTML = missHtml;
+
+  // ===================== 【已升级】闭环精选特码核心逻辑 =====================
+  // 1. 建立当年标准号码-生肖映射（用最新一期API数据，自动适配当年生肖表）
+  const numZodiacMap = new Map();
+  const latestItem = data.list[0];
+  if (latestItem) {
+    const codeArr = getVal(latestItem, 'openCode', '').split(',');
+    const zodArrRaw = getVal(latestItem, 'zodiac', '').split(',');
+    const zodArr = zodArrRaw.map(z => zodiacTradToSimp[z] || z);
+    codeArr.forEach((num, idx) => {
+      const numVal = Number(num);
+      if (numVal && zodArr[idx]) numZodiacMap.set(numVal, zodArr[idx]);
+    });
+  }
+
+  // 2. 锁定核心生肖池：TOP2热门生肖 + 1个高遗漏反弹生肖（筛选逻辑完全不变）
+  const coreZodiacs = data.topZod.slice(0, 2).map(i => i[0]);
+  const missZodiac = Object.entries(data.zodMiss).sort((a, b) => b[1] - a[1]).slice(0, 1).map(i => i[0]);
+  if (missZodiac.length && !coreZodiacs.includes(missZodiac[0])) coreZodiacs.push(missZodiac[0]);
+
+  // 3. 锁定热门尾数TOP3（筛选逻辑完全不变）
+  const hotTails = data.topTail.slice(0, 3).map(i => i.t);
+
+  // 4. 筛选候选号码：核心生肖 + 热门尾数，叠加权重排序（筛选逻辑完全不变）
+  const candidateNums = [];
+  for (let num = 1; num <= 49; num++) {
+    const zod = numZodiacMap.get(num);
+    const tail = num % 10;
+    // 核心过滤条件完全不变
+    if (coreZodiacs.includes(zod) && hotTails.includes(tail)) {
+      const miss = data.zodMiss[zod] || 0;
+      const count = data.zodCount[zod] || 0;
+      candidateNums.push({
+        num,
+        weight: count * 10 + (10 - miss)
+      });
+    }
+  }
+
+  // 5. 按权重从高到低排序，取用户选择的数量（新增动态数量）
+  const targetCount = state.selectedNumCount;
+  candidateNums.sort((a, b) => b.weight - a.weight);
+  let finalNums = candidateNums.slice(0, targetCount).map(i => i.num);
+
+  // 6. 兜底机制：筛选结果不足目标数量时，用近期热门特码补充
+  if (finalNums.length < targetCount) {
+    const fillNums = [...new Set(data.list.map(item => getSpecial(item).te))]
+      .filter(num => !finalNums.includes(num))
+      .slice(0, targetCount - finalNums.length);
+    finalNums.push(...fillNums);
+  }
+
+  // 7. 【新增要求1】按数字大小从小到大排序
+  finalNums.sort((a, b) => a - b);
+
+  // 8. 【新增要求2】统一转为两位数格式（01 02 03...）
+  const finalFormatNums = finalNums.map(num => pad(num));
+
+  // 渲染到页面
+  $('zodiacFinalNum').innerText = `✅ 精选特码：${finalFormatNums.join(' ') || '无'}`;
 }
 
-// 初始化
-async function loadLatest(){try{const d=await(await fetch(API.latest)).json();d[0]&&renderLatest(d[0]);}catch(e){}}
-async function loadHistory(){
-  try{
+// ===================== 基础渲染函数 =====================
+function buildBall(num, color, zodiac, size = 38, fs = 17) {
+  return `
+  <div class="ball-item" style="min-width:${size}px;">
+    <div class="ball ${color}" style="width:${size}px;height:${size}px;font-size:${fs}px;">${num}</div>
+    <div class="ball-zodiac">${zodiac}</div>
+  </div>`;
+}
+
+function renderLatest(item) {
+  if (!item) return;
+  const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
+  const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
+  // 渲染时自动转简体
+  const s = getSpecial(item);
+  const zodArr = s.fullZodArr;
+  let html = '';
+  for (let i = 0; i < 6; i++) html += buildBall(codeArr[i], waveArr[i], zodArr[i]);
+  html += '<div class="ball-sep">+</div>' + buildBall(codeArr[6], waveArr[6], zodArr[6]);
+  $('latestBalls').innerHTML = html;
+  $('curExpect').innerText = getVal(item, 'expect', '--');
+}
+
+function renderHistory() {
+  const { historyData, showCount } = state;
+  const list = historyData.slice(0, showCount);
+  if (!list.length) {
+    $('historyList').innerHTML = '<div style="padding:20px;text-align:center;">暂无历史数据</div>';
+    return;
+  }
+  $('historyList').innerHTML = list.map(item => {
+    const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
+    const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
+    // 渲染时自动转简体
+    const s = getSpecial(item);
+    const zodArr = s.fullZodArr;
+    let balls = '';
+    for (let i = 0; i < 6; i++) balls += buildBall(codeArr[i], waveArr[i], zodArr[i], 32, 15);
+    balls += '<div class="ball-sep">+</div>' + buildBall(codeArr[6], waveArr[6], zodArr[6], 32, 15);
+    return `
+    <div class="history-item">
+      <div class="history-expect">第${getVal(item, 'expect', '')}期</div>
+      <div class="ball-group">${balls}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== 交互函数 =====================
+function toggleDetail(id) {
+  const el = $(id);
+  const btn = el.previousElementSibling.querySelector('.toggle-btn');
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  btn.textContent = el.style.display === 'block' ? '收起详情' : '展开详情';
+}
+
+// 期数同步（全维度→生肖）
+function syncAnalyze() {
+  const custom = $('customNum').value.trim();
+  const selectVal = $('analyzeSelect').value;
+  state.analyzeLimit = custom && !isNaN(custom) && custom > 0
+    ? Number(custom)
+    : selectVal === 'all' ? state.historyData.length : Number(selectVal);
+  $('zodiacAnalyzeSelect').value = selectVal;
+  $('zodiacCustomNum').value = custom;
+  renderFullAnalysis();
+  renderZodiacAnalysis();
+}
+
+// 期数+数量同步（生肖→全维度）
+function syncZodiacAnalyze() {
+  // 期数同步
+  const customPeriod = $('zodiacCustomNum').value.trim();
+  const selectPeriodVal = $('zodiacAnalyzeSelect').value;
+  state.analyzeLimit = customPeriod && !isNaN(customPeriod) && customPeriod > 0
+    ? Number(customPeriod)
+    : selectPeriodVal === 'all' ? state.historyData.length : Number(selectPeriodVal);
+  $('analyzeSelect').value = selectPeriodVal;
+  $('customNum').value = customPeriod;
+
+  // 新增：号码数量同步+校验
+  const countVal = $('numCountSelect').value;
+  const customCount = $('customNumCount').value.trim();
+  let finalCount = 5;
+
+  if (countVal === 'custom') {
+    // 自定义数量校验：最小1，最大49，非法值默认5
+    finalCount = customCount && !isNaN(customCount) && Number(customCount) >= 1 && Number(customCount) <= 49
+      ? Number(customCount)
+      : 5;
+  } else {
+    finalCount = Number(countVal);
+  }
+  state.selectedNumCount = finalCount;
+
+  // 重新渲染
+  renderFullAnalysis();
+  renderZodiacAnalysis();
+}
+
+// 新增：号码数量选择器交互
+$('numCountSelect').onchange = function() {
+  const isCustom = this.value === 'custom';
+  $('customNumCount').style.display = isCustom ? 'inline-block' : 'none';
+  // 非自定义模式直接同步
+  if (!isCustom) {
+    state.selectedNumCount = Number(this.value);
+    renderZodiacAnalysis();
+  }
+};
+
+// 新增：自定义数量输入实时同步
+$('customNumCount').oninput = function() {
+  const val = this.value.trim();
+  if (val && !isNaN(val) && Number(val) >= 1 && Number(val) <= 49) {
+    state.selectedNumCount = Number(val);
+    renderZodiacAnalysis();
+  }
+};
+
+// ===================== 核心数据处理（去重+排序固化+简体统一）=====================
+async function refreshHistory() {
+  $('historyList').innerHTML = '<div style="padding:20px;text-align:center;">加载中...</div>';
+  try {
     const res = await fetch(API.history + YEAR);
     const data = await res.json();
-    historyData = data.data || [];
+    let rawData = data.data || [];
+
+    // 1. 过滤无效数据：必须有期号和开奖号码
+    rawData = rawData.filter(item => {
+      const expect = getVal(item, 'expect', '');
+      const openCode = getVal(item, 'openCode', '');
+      return expect && openCode && openCode.split(',').length === 7;
+    });
+
+    // 2. 强制去重：按期号唯一去重，同一期号仅保留1条
+    const uniqueMap = new Map();
+    rawData.forEach(item => {
+      const expectNum = Number(getVal(item, 'expect', 0));
+      if (expectNum && !isNaN(expectNum)) {
+        uniqueMap.set(expectNum, item);
+      }
+    });
+
+    // 3. 强制排序：期号降序排列，期数越大越新，永远排在最前面
+    let sortedData = Array.from(uniqueMap.values()).sort((a, b) => {
+      const expectA = Number(getVal(a, 'expect', 0));
+      const expectB = Number(getVal(b, 'expect', 0));
+      return expectB - expectA;
+    });
+
+    // 4. 赋值全局状态，所有逻辑统一使用这个排序后的数组
+    state.historyData = sortedData;
+
+    // 5. 统一渲染：最新开奖直接用排序后的第一条，和历史记录完全一致
+    if (sortedData.length > 0) renderLatest(sortedData[0]);
     renderHistory();
-    $('loadMore').style.display = historyData.length > showCount ? 'block' : 'none';
-  }catch(e){
-    $('historyList').innerHTML = '歷史數據加載失敗';
+    renderFullAnalysis();
+    renderZodiacAnalysis();
+  } catch (e) {
+    $('historyList').innerHTML = '<div style="padding:20px;text-align:center;color:#d32f2f;">数据加载失败，请刷新重试</div>';
   }
+  $('loadMore').style.display = state.historyData.length > state.showCount ? 'block' : 'none';
 }
-function startCountdown(){
-  setInterval(()=>{
-    const now=new Date(),t=new Date();t.setHours(21,32,32);
-    if(now>t)t.setDate(t.getDate()+1);
-    const diff=t-now,h=pad(Math.floor(diff/3600000)),m=pad(Math.floor((diff%3600000)/60000)),s=pad(Math.floor((diff%60000)/1000));
-    $('countdown').innerText=`${h}:${m}:${s}`;
-  },1000);
+
+// ===================== 倒计时&自动刷新 =====================
+function startCountdown() {
+  setInterval(() => {
+    const now = new Date();
+    const target = new Date();
+    target.setHours(21, 32, 32, 0);
+    if (now > target) target.setDate(target.getDate() + 1);
+    const diff = target - now;
+    const h = pad(Math.floor(diff / 3600000));
+    const m = pad(Math.floor((diff % 3600000) / 60000));
+    const s = pad(Math.floor((diff % 60000) / 1000));
+    $('countdown').innerText = `${h}:${m}:${s}`;
+  }, 1000);
 }
-window.onload=()=>{
-  bindEvents();
-  loadLatest();
-  loadHistory();
+
+function isInDrawTime() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  return h === 21 && m >= 32 && m <= 40;
+}
+
+function startAutoRefresh() {
+  if (state.autoRefreshTimer) clearInterval(state.autoRefreshTimer);
+  state.autoRefreshTimer = setInterval(() => {
+    if (isInDrawTime()) refreshHistory();
+    else {
+      clearInterval(state.autoRefreshTimer);
+      state.autoRefreshTimer = null;
+    }
+  }, 20000);
+}
+
+function checkDrawTimeLoop() {
+  setInterval(() => {
+    if (isInDrawTime() && !state.autoRefreshTimer) startAutoRefresh();
+  }, 60000);
+}
+
+// ===================== 标签切换 =====================
+function bindTabs() {
+  $('tabHistory').onclick = () => {
+    $('tabHistory').classList.add('active');
+    $('tabAnalysis').classList.remove('active');
+    $('tabZodiac').classList.remove('active');
+    $('historyPanel').classList.add('active');
+    $('analysisPanel').classList.remove('active');
+    $('zodiacAnalysisPanel').classList.remove('active');
+  };
+  $('tabAnalysis').onclick = () => {
+    $('tabAnalysis').classList.add('active');
+    $('tabHistory').classList.remove('active');
+    $('tabZodiac').classList.remove('active');
+    $('analysisPanel').classList.add('active');
+    $('historyPanel').classList.remove('active');
+    $('zodiacAnalysisPanel').classList.remove('active');
+    renderFullAnalysis();
+  };
+  $('tabZodiac').onclick = () => {
+    $('tabZodiac').classList.add('active');
+    $('tabHistory').classList.remove('active');
+    $('tabAnalysis').classList.remove('active');
+    $('zodiacAnalysisPanel').classList.add('active');
+    $('historyPanel').classList.remove('active');
+    $('analysisPanel').classList.remove('active');
+    renderZodiacAnalysis();
+  };
+  $('loadMore').onclick = () => {
+    state.showCount += 30;
+    renderHistory();
+    if (state.showCount >= state.historyData.length) {
+      $('loadMore').style.display = 'none';
+    }
+  };
+}
+
+// ===================== 初始化 =====================
+window.onload = () => {
+  bindTabs();
   startCountdown();
-  setInterval(loadLatest,60000);
+  refreshHistory();
+  checkDrawTimeLoop();
+  if (isInDrawTime()) startAutoRefresh();
 };
 </script>
 </body>
