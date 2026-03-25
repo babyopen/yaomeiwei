@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🇲🇴 特碼全維度分析</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, "Microsoft JhengHei", BlinkMacSystemFont, sans-serif;
+  background: #F5F7FA;
+  padding: 12px;
+}
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.page-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #d32f2f;
+  margin: 0 0 14px;
+}
+
+/* 卡片 - 统一更精致 */
+.card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1D1D1F;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  background: #d32f2f;
+  border-radius: 2px;
+}
+
+/* 倒计时 */
+.timer-card {
+  background: linear-gradient(90deg, #FFF5F5, #FFF0F0);
+}
+.timer-row {
+  text-align: center;
+  color: #cf1322;
+}
+.timer-text {
+  font-size: 15px;
+  opacity: 0.85;
+}
+.timer-count {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 4px;
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+/* 开奖球 */
+.ball-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.ball-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 38px;
+}
+.ball {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+.ball.red { background: radial-gradient(circle at 30% 30%, #ff4d4f, #cf1322); }
+.ball.blue { background: radial-gradient(circle at 30% 30%, #40a9ff, #096dd9); }
+.ball.green { background: radial-gradient(circle at 30% 30%, #73d13d, #389e0d); }
+.ball-zodiac {
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+}
+.ball-sep {
+  font-size: 22px;
+  color: #999;
+  line-height: 38px;
+  padding: 0 2px;
+}
+.latest-info {
+  text-align: center;
+  color: #967341;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.latest-time {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* 标签栏 */
+.tab-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  background: #E9EBF0;
+  color: #555;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.tab-btn.active {
+  background: #d32f2f;
+  color: #fff;
+}
+.tab-btn.analyze.active {
+  background: #007aff;
+  color: #fff;
+}
+
+/* 历史 */
+.history-item {
+  padding: 14px 0;
+  border-bottom: 1px solid #F0F0F5;
+}
+.history-expect {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  text-align: left;
+}
+.history-item .ball-group { justify-content: flex-start; gap: 8px; }
+.load-more {
+  text-align: center;
+  padding: 12px;
+  background: #F5F7FA;
+  border-radius: 12px;
+  color: #007aff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.filter-select, .filter-input, .filter-btn {
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: border 0.2s;
+}
+.filter-select:focus, .filter-input:focus {
+  border-color: #007aff;
+  outline: none;
+}
+.filter-select { flex: 1.2; }
+.filter-input { flex: 1; width: 70px; }
+.filter-btn {
+  background: #007aff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* 🔥 热门结论 */
+.hot-wrap-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #d32f2f;
+  margin: 12px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hot-wrap-title::before {
+  content: "🔥";
+  font-size: 18px;
+}
+.hot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.hot-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 14px;
+  border-left: 5px solid #d32f2f;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.05);
+}
+.hot-card.full {
+  grid-column: span 2;
+  border-left-color: #007aff;
+  background: #fff;
+}
+.hot-card .label {
+  font-size: 12px;
+  color: #8A8A93;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.hot-card .value {
+  font-size: 17px;
+  font-weight: 800;
+  color: #1D1D1F;
+  line-height: 1.3;
+}
+.hot-card.full .value {
+  color: #007aff;
+  font-size: 16px;
+}
+
+/* 📊 排行榜 - 更精致对齐 */
+.rank-box {
+  margin-top: 14px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.rank-header {
+  display: flex;
+  padding: 6px 0 8px;
+  font-size: 11px;
+  color: #8A8A93;
+  border-bottom: 1px solid #E5E7EB;
+}
+.rank-header .rank-no { width: 32px; text-align: center; }
+.rank-header .rank-name { flex: 1; padding: 0 6px; }
+.rank-header .rank-count { width: 42px; text-align: right; }
+.rank-header .rank-rate { width: 48px; text-align: right; }
+.rank-header .rank-miss { width: 48px; text-align: right; }
+
+.rank-row {
+  display: flex;
+  padding: 8px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #F0F0F5;
+  align-items: center;
+}
+.rank-row:last-child { border-bottom: none; }
+.rank-row .rank-no {
+  width: 32px;
+  text-align: center;
+  font-weight: 700;
+  color: #d32f2f;
+}
+.rank-row .rank-name { flex: 1; padding: 0 6px; }
+.rank-row .rank-count {
+  width: 42px;
+  text-align: right;
+  font-weight: 600;
+}
+.rank-row .rank-rate {
+  width: 48px;
+  text-align: right;
+  color: #8A8A93;
+}
+.rank-row .rank-miss {
+  width: 48px;
+  text-align: right;
+  color: #8A8A93;
+}
+
+/* 子标题 & 标签 & 展开按钮 */
+.sub-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 20px 0 12px;
+  color: #1D1D1F;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hot-tag {
+  display: inline-block;
+  background: #FFECEC;
+  color: #d32f2f;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+.toggle-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #007aff;
+  background: #F0F5FF;
+  padding: 4px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+.toggle-btn:hover {
+  background: #E0EDFF;
+}
+
+/* 统计布局 */
+.analysis-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+}
+.analysis-item {
+  flex: 1;
+  min-width: 72px;
+  background: #F7F8FA;
+  padding: 12px 10px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 12px;
+}
+.analysis-item .label {
+  color: #8A8A93;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.analysis-item .value {
+  font-weight: 700;
+  font-size: 15px;
+  color: #007aff;
+}
+
+.item-full {
+  background: #F7F8FA;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.detail-box {
+  display: none;
+  margin-top: 10px;
+  background: #F9FAFC;
+  border-radius: 12px;
+  padding: 14px;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.empty-tip {
+  text-align: center;
+  padding: 24px 0;
+  color: #8A8A93;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 class="page-title">🇲🇴 實時開獎直播</h1>
+  <!-- 倒计时 -->
+  <div class="card timer-card">
+    <div class="timer-row">
+      <div class="timer-text">距離下期開獎還有</div>
+      <div class="timer-count" id="countdown">00:00:00</div>
+    </div>
+  </div>
+  <!-- 最新开奖 -->
+  <div class="card latest-card">
+    <div class="latest-info">第 <span id="curExpect">--</span> 期開獎結果</div>
+    <div class="ball-group" id="latestBalls"></div>
+    <div class="latest-time" id="curTime">開獎時間：--</div>
+  </div>
+  <!-- 标签 -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabHistory">歷史記錄</button>
+    <button class="tab-btn analyze" id="tabAnalysis">全維度分析</button>
+  </div>
+  <!-- 历史 -->
+  <div class="tab-panel active" id="historyPanel">
+    <div class="card">
+      <div class="card-title">年度歷史記錄</div>
+      <div id="historyList">加載中...</div>
+      <div id="loadMore" class="load-more" style="display:none;">點擊載入更多</div>
+    </div>
+  </div>
+  <!-- 全维度分析 + 生肖置顶 + 全排行 + 头数含0 -->
+  <div class="tab-panel" id="analysisPanel">
+    <div class="card">
+      <div class="card-title">特碼全維度統計</div>
+      <div class="filter-bar">
+        <select id="analyzeSelect" class="filter-select">
+          <option value="10">最近10期</option>
+          <option value="20">最近20期</option>
+          <option value="30">最近30期</option>
+          <option value="all">全年數據</option>
+        </select>
+        <input type="number" id="customNum" class="filter-input" placeholder="自定義">
+        <button class="filter-btn" id="filterBtn">確認</button>
+      </div>
+
+      <div class="empty-tip" id="emptyTip">暫無數據可分析</div>
+
+      <!-- 🔥 熱門結論 -->
+      <div id="hotWrap" style="display:none;">
+        <div class="hot-wrap-title">熱門結論</div>
+        <div class="hot-grid">
+          <div class="hot-card"><div class="label">核心形態</div><div class="value" id="hotShape">--</div></div>
+          <div class="hot-card"><div class="label">熱門生肖</div><div class="value" id="hotZodiac">--</div></div>
+          <div class="hot-card"><div class="label">最熱頭/尾數</div><div class="value" id="hotHeadTail">--</div></div>
+          <div class="hot-card"><div class="label">波色/五行</div><div class="value" id="hotColorWx">--</div></div>
+          <div class="hot-card full"><div class="label">遺漏總結</div><div class="value" id="hotMiss">--</div></div>
+        </div>
+      </div>
+
+      <!-- ====================================== -->
+      <!-- ✅ 【生肖熱門 置顶】放在最上方 -->
+      <!-- ====================================== -->
+      <div class="sub-title">
+        <span>生肖統計 <span class="hot-tag">熱門TOP</span></span>
+      </div>
+      <div class="item-full" style="text-align:left;line-height:1.6;display:block;">
+        熱門生肖 → <span id="hotZodiac2" style="color:#d32f2f;font-weight:700;">--</span>
+      </div>
+      <div id="zodiacRank" class="rank-box" style="background:#F9FAFC; border-radius:12px; padding:12px;"></div>
+
+      <!-- 1.單雙&大小 + 排行 -->
+      <div class="sub-title">
+        <span>單雙 & 大小 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail1')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門 → <span id="hotShape2">--</span></div>
+      <div class="detail-box" id="detail1">
+        <div class="analysis-grid">
+          <div class="analysis-item"><div class="label">單數</div><div class="value" id="odd">--</div></div>
+          <div class="analysis-item"><div class="label">雙數</div><div class="value" id="even">--</div></div>
+          <div class="analysis-item"><div class="label">大(≥25)</div><div class="value" id="big">--</div></div>
+          <div class="analysis-item"><div class="label">小(&lt;25)</div><div class="value" id="small">--</div></div>
+        </div>
+        <div id="singleDoubleRank" class="rank-box"></div>
+        <div id="bigSmallRank" class="rank-box"></div>
+      </div>
+
+      <!-- 2.區間 + 排行 -->
+      <div class="sub-title">
+        <span>區間統計 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail2')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門區間 → <span id="hotRange2">--</span></div>
+      <div class="detail-box" id="detail2">
+        <div class="analysis-row">
+          <div class="analysis-item"><div class="label">1-9</div><div class="value" id="r1">--</div></div>
+          <div class="analysis-item"><div class="label">10-19</div><div class="value" id="r2">--</div></div>
+          <div class="analysis-item"><div class="label">20-29</div><div class="value" id="r3">--</div></div>
+          <div class="analysis-item"><div class="label">30-39</div><div class="value" id="r4">--</div></div>
+          <div class="analysis-item"><div class="label">40-49</div><div class="value" id="r5">--</div></div>
+        </div>
+        <div id="rangeRank" class="rank-box"></div>
+      </div>
+
+      <!-- 3.頭數 + 排行 ✅ 包含 0 -->
+      <div class="sub-title">
+        <span>頭數統計 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail3')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門頭數 → <span id="hotHead2">--</span></div>
+      <div class="detail-box" id="detail3">
+        <div class="analysis-row">
+          <div class="analysis-item"><div class="label">頭0</div><div class="value" id="h0">--</div></div>
+          <div class="analysis-item"><div class="label">頭1</div><div class="value" id="h1">--</div></div>
+          <div class="analysis-item"><div class="label">頭2</div><div class="value" id="h2">--</div></div>
+          <div class="analysis-item"><div class="label">頭3</div><div class="value" id="h3">--</div></div>
+          <div class="analysis-item"><div class="label">頭4</div><div class="value" id="h4">--</div></div>
+        </div>
+        <div id="headRank" class="rank-box"></div>
+      </div>
+
+      <!-- 4.尾數 + 排行 -->
+      <div class="sub-title">
+        <span>尾數統計 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail4')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門尾數 → <span id="hotTail2">--</span></div>
+      <div class="detail-box" id="detail4">
+        <div class="analysis-row" id="tailRow"></div>
+        <div id="tailRank" class="rank-box"></div>
+      </div>
+
+      <!-- 5.波色 + 排行 -->
+      <div class="sub-title">
+        <span>波色統計 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail5')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門波色 → <span id="hotColor2">--</span></div>
+      <div class="detail-box" id="detail5">
+        <div class="analysis-row">
+          <div class="analysis-item"><div class="label">紅</div><div class="value" id="cRed">--</div></div>
+          <div class="analysis-item"><div class="label">藍</div><div class="value" id="cBlue">--</div></div>
+          <div class="analysis-item"><div class="label">綠</div><div class="value" id="cGreen">--</div></div>
+        </div>
+        <div id="colorRank" class="rank-box"></div>
+      </div>
+
+      <!-- 6.五行 + 排行 -->
+      <div class="sub-title">
+        <span>五行統計 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail6')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門五行 → <span id="hotWuxing2">--</span></div>
+      <div class="detail-box" id="detail6">
+        <div class="analysis-row">
+          <div class="analysis-item"><div class="label">金</div><div class="value" id="wJin">--</div></div>
+          <div class="analysis-item"><div class="label">木</div><div class="value" id="wMu">--</div></div>
+          <div class="analysis-item"><div class="label">水</div><div class="value" id="wShui">--</div></div>
+          <div class="analysis-item"><div class="label">火</div><div class="value" id="wHuo">--</div></div>
+          <div class="analysis-item"><div class="label">土</div><div class="value" id="wTu">--</div></div>
+        </div>
+        <div id="wuxingRank" class="rank-box"></div>
+      </div>
+
+      <!-- 7.家禽野獸 + 排行 -->
+      <div class="sub-title">
+        <span>家禽/野獸 <span class="hot-tag">熱門</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail7')">展開詳情</button>
+      </div>
+      <div class="item-full">熱門 → <span id="hotAnimal">--</span></div>
+      <div class="detail-box" id="detail7">
+        <div class="analysis-grid">
+          <div class="analysis-item"><div class="label">家禽</div><div class="value" id="aniHome">--</div></div>
+          <div class="analysis-item"><div class="label">野獸</div><div class="value" id="aniWild">--</div></div>
+        </div>
+        <div id="animalRank" class="rank-box"></div>
+      </div>
+
+      <!-- 8.遺漏統計 -->
+      <div class="sub-title">
+        <span>遺漏統計 <span class="hot-tag">公式版</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail8')">展開詳情</button>
+      </div>
+      <div class="item-full">熱號/溫號/冷號 → <span id="hotColdTip">--</span></div>
+      <div class="detail-box" id="detail8">
+        <div class="analysis-grid">
+          <div class="analysis-item"><div class="label">當前遺漏</div><div class="value" id="missCur">--</div></div>
+          <div class="analysis-item"><div class="label">平均遺漏</div><div class="value" id="missAvg">--</div></div>
+          <div class="analysis-item"><div class="label">最大遺漏</div><div class="value" id="missMax">--</div></div>
+          <div class="analysis-item"><div class="label">熱號數量</div><div class="value" id="missHot">--</div></div>
+          <div class="analysis-item"><div class="label">溫號數量</div><div class="value" id="missWarm">--</div></div>
+          <div class="analysis-item"><div class="label">冷號數量</div><div class="value" id="missCold">--</div></div>
+        </div>
+      </div>
+
+      <!-- 9.連出統計 -->
+      <div class="sub-title">
+        <span>連出統計 <span class="hot-tag">公式版</span></span>
+        <button class="toggle-btn" onclick="toggleDetail('detail9')">展開詳情</button>
+      </div>
+      <div class="item-full">當前/最長連出 → <span id="streakTip">--</span></div>
+      <div class="detail-box" id="detail9">
+        <div class="analysis-grid">
+          <div class="analysis-item"><div class="label">當前連出</div><div class="value" id="streakCur">--</div></div>
+          <div class="analysis-item"><div class="label">最長連出</div><div class="value" id="streakMax">--</div></div>
+        </div>
+      </div>
+
+      <!-- 綜合熱門號碼 -->
+      <div class="sub-title" style="color:#d32f2f">綜合熱門號碼</div>
+      <div class="item-full">
+        特碼熱門TOP5 → <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span>
+      </div>
+      <div style="font-size:12px;color:#8A8A93;margin-top:14px;">點擊展開查看完整統計+排行</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================================
+// 配置 & 接口（使用你指定的歷史接口）
+// ======================================
+const API = {
+  latest: 'https://macaumarksix.com/api/macaujc2.com',
+  history: 'https://history.macaumarksix.com/history/macaujc2/y/'
+};
+const YEAR = new Date().getFullYear();
+let historyData = [];
+let analyzeLimit = 10;
+let showCount = 20;
+const pad = n => String(n).padStart(2, '0');
+const $ = id => document.getElementById(id);
+
+// 折叠切换
+function toggleDetail(id) {
+  const el = $(id);
+  const btn = el.previousElementSibling.querySelector('.toggle-btn');
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  btn.textContent = el.style.display === 'block' ? '收起詳情' : '展開詳情';
+}
+
+// 基礎映射
+const getWuxing = n => {
+  const m = n % 10;
+  if ([0,5].includes(m)) return '金';
+  if ([1,6].includes(m)) return '木';
+  if ([2,7].includes(m)) return '水';
+  if ([3,8].includes(m)) return '火';
+  return '土';
+};
+const getAnimal = zod => {
+  const home = ['鼠','牛','兔','馬','羊','雞','狗','豬'];
+  return home.includes(zod) ? '家禽' : '野獸';
+};
+
+// 遺漏公式
+function calcMiss(list) {
+  const T = list.length;
+  const lastAppear = {};
+  for (let m = 1; m <= 49; m++) lastAppear[m] = -1;
+  list.forEach((item, idx) => {
+    const te = Number(item.openCode.split(',')[6]);
+    lastAppear[te] = idx;
+  });
+  let totalMissSum = 0, maxMiss = 0, hot = 0, warm = 0, cold = 0;
+  const allMiss = [];
+  for (let m = 1; m <= 49; m++) {
+    const p = lastAppear[m];
+    let currentMiss = p >= 1 ? p : T;
+    allMiss.push(currentMiss);
+    totalMissSum += currentMiss;
+    if (currentMiss > maxMiss) maxMiss = currentMiss;
+    if (currentMiss >= 0 && currentMiss <= 3) hot++;
+    else if (currentMiss >= 4 && currentMiss <= 9) warm++;
+    else cold++;
+  }
+  const cValid = Object.values(lastAppear).filter(v => v !== -1).length;
+  const avgMiss = cValid === 0 ? '-' : (totalMissSum / 49).toFixed(1);
+  const curMiss = Math.max(...allMiss);
+  return { curMiss, avgMiss, maxMiss, hot, warm, cold };
+}
+
+// 連出公式
+function calcStreak(list) {
+  if (!list.length) return { cur: 0, max: 0 };
+  const getShape = te => {
+    const odd = te % 2 === 1;
+    const big = te >= 25;
+    return `${odd}_${big}`;
+  };
+  let curStreak = 1;
+  const firstShape = getShape(Number(list[0].openCode.split(',')[6]));
+  for (let i = 1; i < list.length; i++) {
+    const s = getShape(Number(list[i].openCode.split(',')[6]));
+    if (s === firstShape) curStreak++;
+    else break;
+  }
+  let maxStreak = 1, current = 1;
+  let prevShape = getShape(Number(list[0].openCode.split(',')[6]));
+  for (let i = 1; i < list.length; i++) {
+    const te = Number(list[i].openCode.split(',')[6]);
+    const s = getShape(te);
+    if (s === prevShape) {
+      current++;
+      if (current > maxStreak) maxStreak = current;
+    } else {
+      current = 1;
+      prevShape = s;
+    }
+  }
+  return { cur: curStreak, max: maxStreak };
+}
+
+// 工具函數
+function buildBall(num, color, zodiac, size=38, fs=17){
+  return `<div class="ball-item" style="min-width:${size}px;">
+    <div class="ball ${color}" style="width:${size}px;height:${size}px;font-size:${fs}px;">${num}</div>
+    <div class="ball-zodiac" style="font-size:12px;">${zodiac}</div>
+  </div>`;
+}
+function getHot(arr){
+  return arr.sort((a,b)=>b[1]-a[1]).slice(0,2).map(i=>i[0]).join(' / ');
+}
+
+// 📊 統一排行榜渲染
+function renderRank(containerId, obj, total) {
+  if(total === 0) { $(containerId).innerHTML = ''; return; }
+  const sorted = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+  let html = `<div class="rank-header">
+    <div class="rank-no">名次</div>
+    <div class="rank-name">分類</div>
+    <div class="rank-count">次數</div>
+    <div class="rank-rate">占比</div>
+    <div class="rank-miss">遺漏</div>
+  </div>`;
+  sorted.forEach(([name, cnt], i) => {
+    const rate = ((cnt/total)*100).toFixed(0)+'%';
+    const miss = cnt>0 ? ((total-cnt)/cnt).toFixed(1) : total;
+    html += `<div class="rank-row">
+      <div class="rank-no">${i+1}</div>
+      <div class="rank-name">${name}</div>
+      <div class="rank-count">${cnt}</div>
+      <div class="rank-rate">${rate}</div>
+      <div class="rank-miss">${miss}</div>
+    </div>`;
+  });
+  $(containerId).innerHTML = html;
+}
+
+// 渲染最新
+function renderLatest(item){
+  $('curExpect').innerText = item.expect;
+  $('curTime').innerText = `開獎時間：${item.openTime}`;
+  const n=item.openCode.split(','),c=item.wave.split(','),z=item.zodiac.split(',');
+  let html=''; for(let i=0;i<6;i++)html+=buildBall(n[i],c[i],z[i]);
+  html+='<div class="ball-sep">+</div>'+buildBall(n[6],c[6],z[6]);
+  $('latestBalls').innerHTML=html;
+}
+
+// 渲染歷史
+function renderHistory(){
+  const list=historyData.slice(0,showCount);
+  if(!list.length){$('historyList').innerHTML='<div style="padding:20px">暫無數據</div>';return;}
+  $('historyList').innerHTML=list.map(item=>{
+    const n=item.openCode.split(','),c=item.wave.split(','),z=item.zodiac.split(',');
+    let b=''; for(let i=0;i<6;i++)b+=buildBall(n[i],c[i],z[i],32,15);
+    b+='<div class="ball-sep">+</div>'+buildBall(n[6],c[6],z[6],32,15);
+    return `<div class="history-item"><div class="history-expect">第${item.expect}期</div>
+      <div class="ball-group">${b}</div></div>`;
+  }).join('');
+}
+
+// 渲染分析（已修改：頭數含0 + 生肖置顶 + 全排行）
+function renderAnalysis(){
+  if(!historyData.length){
+    document.querySelectorAll('.value').forEach(e=>e.innerText='--');
+    $('hotWrap').style.display = 'none';
+    $('emptyTip').style.display = 'block';
+    return;
+  }
+  $('hotWrap').style.display = 'block';
+  $('emptyTip').style.display = 'none';
+
+  const realLimit = Math.min(analyzeLimit, historyData.length);
+  const list = historyData.slice(0, realLimit);
+  const total = list.length;
+
+  // 統計對象 ✅ 頭數包含 0
+  const singleDouble={單:0,雙:0}; const bigSmall={大:0,小:0};
+  const range={ '1-9':0,'10-19':0,'20-29':0,'30-39':0,'40-49':0 };
+  const head={0:0,1:0,2:0,3:0,4:0}; const tail={0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+  const color={紅:0,藍:0,綠:0}; const wuxing={金:0,木:0,水:0,火:0,土:0};
+  const animal={家禽:0,野獸:0}; const zodiac={}; const numCount={};
+
+  list.forEach(item=>{
+    const nums=item.openCode.split(',').map(Number);
+    const te=nums[6]; const col=item.wave.split(',')[6]; const zod=item.zodiac.split(',')[6];
+    te%2===1 ? singleDouble.單++ : singleDouble.雙++;
+    te>=25 ? bigSmall.大++ : bigSmall.小++;
+    te<=9?range['1-9']++:te<=19?range['10-19']++:te<=29?range['20-29']++:te<=39?range['30-39']++:range['40-49']++;
+    const h=Math.floor(te/10); head[h]++; const t=te%10; tail[t]++;
+    col==='red'?color.紅++:col==='blue'?color.藍++:color.綠++;
+    const wx=getWuxing(te); wuxing[wx]++;
+    const ani=getAnimal(zod); animal[ani]++;
+    zodiac[zod]=(zodiac[zod]||0)+1;
+  });
+
+  // 熱門結論
+  const hotSD = Object.entries(singleDouble).sort((a,b)=>b[1]-a[1])[0];
+  const hotBS = Object.entries(bigSmall).sort((a,b)=>b[1]-a[1])[0];
+  const hotH = Object.entries(head).sort((a,b)=>b[1]-a[1])[0];
+  const hotT = Object.entries(tail).sort((a,b)=>b[1]-a[1])[0];
+  const hotC = Object.entries(color).sort((a,b)=>b[1]-a[1])[0];
+  const hotW = Object.entries(wuxing).sort((a,b)=>b[1]-a[1])[0];
+  const hotZ = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,3).map(i=>i[0]).join('、');
+  const miss = calcMiss(list);
+
+  $('hotShape').innerText = `${hotSD[0]} / ${hotBS[0]}`;
+  $('hotZodiac').innerText = hotZ;
+  $('hotHeadTail').innerText = `${hotH[0]}頭 / ${hotT[0]}尾`;
+  $('hotColorWx').innerText = `${hotC[0]} / ${hotW[0]}`;
+  $('hotMiss').innerText = `熱:${miss.hot} 溫:${miss.warm} 冷:${miss.cold} | 最大遺漏:${miss.maxMiss}期`;
+
+  // 卡片赋值
+  $('odd').innerText=singleDouble.單; $('even').innerText=singleDouble.雙;
+  $('big').innerText=bigSmall.大; $('small').innerText=bigSmall.小;
+  $('r1').innerText=range['1-9'];$('r2').innerText=range['10-19'];$('r3').innerText=range['20-29'];
+  $('r4').innerText=range['30-39'];$('r5').innerText=range['40-49'];
+  // ✅ 頭數包含 0 渲染
+  $('h0').innerText=head[0];$('h1').innerText=head[1];$('h2').innerText=head[2];$('h3').innerText=head[3];$('h4').innerText=head[4];
+  $('cRed').innerText=color.紅;$('cBlue').innerText=color.藍;$('cGreen').innerText=color.綠;
+  $('wJin').innerText=wuxing.金;$('wMu').innerText=wuxing.木;$('wShui').innerText=wuxing.水;
+  $('wHuo').innerText=wuxing.火;$('wTu').innerText=wuxing.土;
+  $('aniHome').innerText=animal.家禽;$('aniWild').innerText=animal.野獸;
+
+  // 📊 渲染所有排行榜
+  renderRank('singleDoubleRank', singleDouble, total);
+  renderRank('bigSmallRank', bigSmall, total);
+  renderRank('rangeRank', range, total);
+  renderRank('headRank', head, total);
+  renderRank('tailRank', tail, total);
+  renderRank('colorRank', color, total);
+  renderRank('wuxingRank', wuxing, total);
+  renderRank('animalRank', animal, total);
+  renderRank('zodiacRank', zodiac, total);
+
+  // 熱門標題
+  $('hotShape2').innerText=getHot(Object.entries(singleDouble).concat(Object.entries(bigSmall)));
+  $('hotRange2').innerText=getHot(Object.entries(range));
+  $('hotHead2').innerText=getHot(Object.entries(head));
+  $('hotTail2').innerText=getHot(Object.entries(tail));
+  $('hotColor2').innerText=getHot(Object.entries(color));
+  $('hotWuxing2').innerText=getHot(Object.entries(wuxing));
+  $('hotAnimal').innerText=getHot(Object.entries(animal));
+
+  // 遺漏 & 連出
+  $('missCur').innerText=miss.curMiss;$('missAvg').innerText=miss.avgMiss;$('missMax').innerText=miss.maxMiss;
+  $('missHot').innerText=miss.hot;$('missWarm').innerText=miss.warm;$('missCold').innerText=miss.cold;
+  $('hotColdTip').innerText=`熱:${miss.hot} 溫:${miss.warm} 冷:${miss.cold}`;
+  const streak = calcStreak(list);
+  $('streakCur').innerText=streak.cur;$('streakMax').innerText=streak.max;
+  $('streakTip').innerText=`當前:${streak.cur}期 最長:${streak.max}期`;
+
+  // 生肖置顶展示
+  const hotZ2 = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>`${i[0]}(${i[1]})`).join(' ');
+  $('hotZodiac2').innerText=hotZ2||'無';
+
+  // 熱門號碼
+  for(let i=1;i<=49;i++)numCount[pad(i)]=0;
+  list.forEach(item=>{ const te=+item.openCode.split(',')[6]; numCount[pad(te)]++; });
+  const hotNum = Object.entries(numCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>i[0]).join(' ');
+  $('hotNumber').innerText=hotNum;
+
+  // 尾數渲染
+  let tailHtml=''; for(let t=0;t<=9;t++){
+    tailHtml+=`<div class="analysis-item"><div class="label">尾${t}</div><div class="value">${tail[t]}</div></div>`;
+  }
+  $('tailRow').innerHTML=tailHtml;
+}
+
+// 事件綁定
+function bindEvents(){
+  $('tabHistory').onclick=()=>{
+    $('tabHistory').classList.add('active');$('tabAnalysis').classList.remove('active');
+    $('historyPanel').classList.add('active');$('analysisPanel').classList.remove('active');
+  };
+  $('tabAnalysis').onclick=()=>{
+    $('tabAnalysis').classList.add('active');$('tabHistory').classList.remove('active');
+    $('analysisPanel').classList.add('active');$('historyPanel').classList.remove('active');
+    renderAnalysis();
+  };
+  $('filterBtn').onclick=()=>{
+    const c=$('customNum').value.trim();
+    const s=$('analyzeSelect').value;
+    analyzeLimit = c&&!isNaN(c)&&c>0 ? +c : (s==='all'?historyData.length:+s);
+    renderAnalysis();
+  };
+  $('analyzeSelect').onchange=()=>$('customNum').value='';
+  $('loadMore').onclick=()=>{
+    showCount+=30; renderHistory();
+    if(showCount>=historyData.length)$('loadMore').style.display='none';
+  };
+}
+
+// 初始化
+async function loadLatest(){try{const d=await(await fetch(API.latest)).json();d[0]&&renderLatest(d[0]);}catch(e){}}
+async function loadHistory(){
+  try{
+    const res = await fetch(API.history + YEAR);
+    const data = await res.json();
+    historyData = data.data || [];
+    renderHistory();
+    $('loadMore').style.display = historyData.length > showCount ? 'block' : 'none';
+  }catch(e){
+    $('historyList').innerHTML = '歷史數據加載失敗';
+  }
+}
+function startCountdown(){
+  setInterval(()=>{
+    const now=new Date(),t=new Date();t.setHours(21,32,32);
+    if(now>t)t.setDate(t.getDate()+1);
+    const diff=t-now,h=pad(Math.floor(diff/3600000)),m=pad(Math.floor((diff%3600000)/60000)),s=pad(Math.floor((diff%60000)/1000));
+    $('countdown').innerText=`${h}:${m}:${s}`;
+  },1000);
+}
+window.onload=()=>{
+  bindEvents();
+  loadLatest();
+  loadHistory();
+  startCountdown();
+  setInterval(loadLatest,60000);
+};
+</script>
+</body>
+</html>
