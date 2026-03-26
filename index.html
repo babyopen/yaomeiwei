@@ -58,46 +58,64 @@ body {
   cursor: pointer;
 }
 
-.ball-group {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 8px;
-  margin: 12px 0;
-  flex-wrap: wrap;
-}
-.ball-item {
-  display: flex;
-  flex-direction: column;
+/* 球号网格布局 —— 确保一行显示 6+1 */
+.ball-grid {
+  display: grid;
+  gap: 6px;
   align-items: center;
-  gap: 4px;
-  min-width: 38px;
+  justify-items: center;
+  margin: 12px 0;
 }
-.ball {
-  width: 38px;
-  height: 38px;
+.latest-grid {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+.history-grid {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+.ball-grid .ball-item {
+  width: 100%;
+  min-width: 0;
+}
+.ball-grid .ball {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  font-size: clamp(14px, 4vw, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   color: #fff;
   font-weight: 700;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
-.ball.red { background: radial-gradient(circle at 30% 30%, #ff4d4f, #cf1322); }
-.ball.blue { background: radial-gradient(circle at 30% 30%, #40a9ff, #096dd9); }
-.ball.green { background: radial-gradient(circle at 30% 30%, #73d13d, #389e0d); }
+.ball-grid .ball.red { background: radial-gradient(circle at 30% 30%, #ff4d4f, #cf1322); }
+.ball-grid .ball.blue { background: radial-gradient(circle at 30% 30%, #40a9ff, #096dd9); }
+.ball-grid .ball.green { background: radial-gradient(circle at 30% 30%, #73d13d, #389e0d); }
+.history-grid .ball {
+  font-size: clamp(12px, 3.5vw, 16px);
+}
+.ball-grid .ball-sep {
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: bold;
+  line-height: 1;
+  color: #999;
+}
 .ball-zodiac {
-  font-size: 12px;
+  font-size: 10px;
   color: #333;
   font-weight: 600;
+  margin-top: 2px;
+  text-align: center;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
-.ball-sep {
-  font-size: 22px;
-  color: #999;
-  line-height: 38px;
-  padding: 0 2px;
+.history-grid .ball-zodiac {
+  font-size: 9px;
+}
+.latest-grid .ball-zodiac {
+  font-size: 11px;
 }
 
 .tab-bar {
@@ -140,7 +158,6 @@ body {
   margin-bottom: 8px;
   text-align: left;
 }
-.history-item .ball-group { justify-content: flex-start; gap: 8px; }
 .load-more {
   text-align: center;
   padding: 12px;
@@ -210,7 +227,6 @@ body {
 .hot-card .label {
   font-size: 12px;
   color: #8A8A93;
-  font-weight: 500;
   margin-bottom: 6px;
 }
 .hot-card .value {
@@ -380,7 +396,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* 生肖关联专用样式 */
 .core-conclusion {
   background: #FFF5F5;
   border-radius: 12px;
@@ -462,7 +477,6 @@ body {
 <body>
 <div class="container">
 
-  <!-- 最新开奖 + 倒计时模块 -->
   <div class="card latest-card">
     <div style="text-align:center; margin-bottom:12px;">
       <div style="font-size:15px; color:#967341;">第 <span id="curExpect">--</span> 期开奖结果</div>
@@ -470,17 +484,15 @@ body {
         距离下期开奖还有 <span class="num" id="countdown">00:00:00</span>
       </div>
     </div>
-    <div class="ball-group" id="latestBalls"></div>
+    <div id="latestBalls"></div>
   </div>
 
-  <!-- 标签栏 -->
   <div class="tab-bar">
     <button class="tab-btn active" id="tabHistory">历史记录</button>
     <button class="tab-btn analyze" id="tabAnalysis">全维度分析</button>
     <button class="tab-btn zodiac" id="tabZodiac">特码生肖关联</button>
   </div>
 
-  <!-- 1. 历史记录模块 -->
   <div class="tab-panel active" id="historyPanel">
     <div class="card">
       <div class="card-title-row">
@@ -492,7 +504,6 @@ body {
     </div>
   </div>
 
-  <!-- 2. 全维度分析模块 -->
   <div class="tab-panel" id="analysisPanel">
     <div class="card">
       <div class="card-title">特码全维度统计</div>
@@ -654,18 +665,19 @@ body {
         </div>
       </div>
 
-      <div class="sub-title" style="color:#d32f2f">综合热门特码</div>
-      <div class="item-full">特码热门TOP5 → <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span></div>
+      <div class="sub-title" style="color:#d32f2f">综合热门特码 TOP5</div>
+      <div class="item-full">
+        特码热门TOP5（生肖+尾数+五行组合）→
+        <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span>
+      </div>
     </div>
   </div>
 
-  <!-- 3. 特码生肖关联模块（新增数量选择器） -->
   <div class="tab-panel" id="zodiacAnalysisPanel">
     <div class="card">
       <div class="card-title-row">
         <div class="card-title" style="color:#13a662;">特码生肖·尾数关联</div>
       </div>
-      <!-- 新增：期数+号码数量双筛选栏 -->
       <div class="filter-bar">
         <select id="zodiacAnalyzeSelect" class="filter-select">
           <option value="10">最近10期</option>
@@ -674,7 +686,6 @@ body {
           <option value="all">全年数据</option>
         </select>
         <input type="number" id="zodiacCustomNum" class="filter-input" placeholder="自定义期数">
-        <!-- 新增：号码数量选择器 -->
         <select id="numCountSelect" class="filter-select">
           <option value="5" selected>5个号</option>
           <option value="10">10个号</option>
@@ -707,7 +718,7 @@ body {
         <div class="sub-title" style="color:#13a662;">④ 高遗漏生肖（反弹关注）</div>
         <div class="data-grid-z data-grid-3" id="zodiacMissGrid"></div>
 
-        <div class="final-recommend-z" id="zodiacFinalNum">✅ 精选特码：--</div>
+        <div class="final-recommend-z" id="zodiacFinalNum">✅ 精选特码（遗漏反弹精选）：--</div>
       </div>
     </div>
   </div>
@@ -715,16 +726,13 @@ body {
 </div>
 
 <script>
-// ===================== 全局常量 & 工具函数（生肖全简体）=====================
 const API = {
   history: 'https://history.macaumarksix.com/history/macaujc2/y/'
 };
 const YEAR = new Date().getFullYear();
-// 所有生肖常量100%使用简体汉字
 const zodiacAll = ["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
 const homeZodiac = ['鼠','牛','兔','马','羊','鸡','狗','猪'];
 const wildZodiac = ['虎','龙','蛇','猴'];
-// 繁体→简体生肖映射表，自动兼容API返回的繁体
 const zodiacTradToSimp = {
   '鼠': '鼠', '牛': '牛', '虎': '虎', '兔': '兔',
   '龍': '龙', '龙': '龙', '蛇': '蛇', '馬': '马', '马': '马',
@@ -735,17 +743,14 @@ const zodiacTradToSimp = {
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 
-// 安全取值
 const getVal = (obj, path, def = '') => {
   return path.split('.').reduce((o, k) => (o || {})[k], obj) ?? def;
 };
 
-// 【核心】仅取第7位特码信息，自动将生肖转为简体
 const getSpecial = item => {
   const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
   const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
   const zodArrRaw = getVal(item, 'zodiac', ',,,,,,,,,,,,').split(',');
-  // 自动将所有生肖转为简体
   const zodArr = zodArrRaw.map(z => zodiacTradToSimp[z] || z);
   const te = Math.max(0, Number(codeArr[6]));
   return {
@@ -758,12 +763,10 @@ const getSpecial = item => {
     big: te >= 25,
     animal: homeZodiac.includes(zodArr[6]) ? '家禽' : '野兽',
     wuxing: getWuxing(te),
-    // 完整简体生肖数组，用于历史记录渲染
     fullZodArr: zodArr
   };
 };
 
-// 五行标准规则
 const getWuxing = n => {
   const m = n % 10;
   if ([0,5].includes(m)) return '金';
@@ -773,7 +776,6 @@ const getWuxing = n => {
   return '土';
 };
 
-// 生肖冷热等级标准
 const getZodiacLevel = (count, miss, total) => {
   const avgCount = total / 12;
   if (count >= avgCount * 1.5 && miss <= 3) return { cls: 'hot', text: '热' };
@@ -781,7 +783,6 @@ const getZodiacLevel = (count, miss, total) => {
   return { cls: 'warm', text: '温' };
 };
 
-// 完整排行渲染
 const renderFullRank = (containerId, dataObj, total) => {
   if (total === 0) { $(containerId).innerHTML = ''; return; }
   const sorted = Object.entries(dataObj).sort((a, b) => b[1] - a[1]);
@@ -808,30 +809,132 @@ const renderFullRank = (containerId, dataObj, total) => {
   $(containerId).innerHTML = html;
 };
 
-// 热门值获取
 const getTopHot = (arr, limit = 2) => {
   return arr.sort((a, b) => b[1] - a[1]).slice(0, limit).map(i => i[0]).join(' / ');
 };
 
-// ===================== 全局状态 =====================
 let state = {
   historyData: [],
   analyzeLimit: 30,
-  selectedNumCount: 5, // 新增：精选特码数量，默认5个
+  selectedNumCount: 5,
   showCount: 20,
   autoRefreshTimer: null
 };
 
-// ===================== 全维度分析计算&渲染（统一规则：数组前=最新）=====================
+// 构建球号（不再内联宽高，完全由CSS控制）
+function buildBall(num, color, zodiac) {
+  return `
+    <div class="ball-item">
+      <div class="ball ${color}">${num}</div>
+      <div class="ball-zodiac">${zodiac}</div>
+    </div>`;
+}
+
+function getCustomTop5() {
+  const list = state.historyData.slice(0, state.analyzeLimit);
+  if (!list.length) return [];
+
+  const zodCount = {};
+  zodiacAll.forEach(z => zodCount[z] = 0);
+  const tailCount = {};
+  for (let t=0;t<=9;t++) tailCount[t] = 0;
+  const wxCount = {金:0,木:0,水:0,火:0,土:0};
+
+  list.forEach(item => {
+    const s = getSpecial(item);
+    if (zodiacAll.includes(s.zod)) zodCount[s.zod]++;
+    tailCount[s.tail]++;
+    wxCount[s.wuxing]++;
+  });
+
+  const topZod = Object.entries(zodCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+  const topTail = Object.entries(tailCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>Number(x[0]));
+  const topWx = Object.entries(wxCount).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]);
+
+  const numZodMap = new Map();
+  if (state.historyData[0]) {
+    const codes = getVal(state.historyData[0], 'openCode', '').split(',');
+    const zods = getVal(state.historyData[0], 'zodiac', '').split(',').map(z=>zodiacTradToSimp[z]||z);
+    codes.forEach((n,i)=>{
+      const num = Number(n);
+      if (num && zods[i]) numZodMap.set(num, zods[i]);
+    });
+  }
+
+  const candidates = [];
+  for (let n=1;n<=49;n++) {
+    const z = numZodMap.get(n);
+    const t = n % 10;
+    const wx = getWuxing(n);
+    if (topZod.includes(z) && topTail.includes(t) && topWx.includes(wx)) {
+      candidates.push(n);
+    }
+  }
+
+  const unique = [...new Set(candidates)];
+  unique.sort((a,b)=>a-b);
+  return unique.slice(0,5).map(pad);
+}
+
+function getCustomSelect() {
+  const list = state.historyData.slice(0, state.analyzeLimit);
+  if (!list.length) return [];
+
+  const recent5 = new Set();
+  list.slice(0,5).forEach(item=>{
+    recent5.add(getSpecial(item).te);
+  });
+
+  const countMap = {};
+  const lastIdx = {};
+  for (let n=1;n<=49;n++) {
+    countMap[n] = 0;
+    lastIdx[n] = -1;
+  }
+
+  list.forEach((item, idx)=>{
+    const te = getSpecial(item).te;
+    countMap[te]++;
+    lastIdx[te] = idx;
+  });
+
+  const total = list.length;
+  const avgMissTotal = total / 49;
+
+  const pool = [];
+  for (let n=1;n<=49;n++) {
+    if (recent5.has(n)) continue;
+    const cnt = countMap[n];
+    const miss = lastIdx[n] === -1 ? total : lastIdx[n];
+    const avg = cnt > 0 ? total / cnt : total;
+    if (miss >= avg && miss <= avg * 2.5 && cnt >= 1) {
+      const score = cnt * 10 + (10 - Math.min(miss,10));
+      pool.push({ num:n, score });
+    }
+  }
+
+  pool.sort((a,b)=>b.score - a.score);
+  const need = state.selectedNumCount;
+  let res = pool.slice(0, need).map(x=>x.num);
+
+  if (res.length < need) {
+    const fill = [];
+    for (let n=1;n<=49;n++) {
+      if (!recent5.has(n) && !res.includes(n)) fill.push(n);
+    }
+    res = res.concat(fill).slice(0, need);
+  }
+
+  res.sort((a,b)=>a-b);
+  return res.map(pad);
+}
+
 function calcFullAnalysis() {
   const { historyData, analyzeLimit } = state;
   if (!historyData.length) return null;
-
-  // 严格遵循：slice(0, limit) 取最新的limit期，数组0=最新
   const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
   const total = list.length;
 
-  // 初始化统计对象
   const singleDouble = { 单: 0, 双: 0 };
   const bigSmall = { 大: 0, 小: 0 };
   const range = { '1-9': 0, '10-19': 0, '20-29': 0, '30-39': 0, '40-49': 0 };
@@ -841,79 +944,67 @@ function calcFullAnalysis() {
   const wuxing = { 金: 0, 木: 0, 水: 0, 火: 0, 土: 0 };
   const animal = { 家禽: 0, 野兽: 0 };
   const zodiac = {}; zodiacAll.forEach(z => zodiac[z] = 0);
-  const numCount = {}; for (let i = 1; i <= 49; i++) numCount[pad(i)] = 0;
-  const lastAppear = {}; for (let i = 1; i <= 49; i++) lastAppear[i] = -1;
 
-  // 循环统计：从最新到旧遍历，仅第一次出现记录索引（最新位置）
   list.forEach((item, idx) => {
     const s = getSpecial(item);
     s.odd ? singleDouble.单++ : singleDouble.双++;
     s.big ? bigSmall.大++ : bigSmall.小++;
-    s.te <= 9 ? range['1-9']++ : s.te <= 19 ? range['10-19']++ : s.te <= 29 ? range['20-29']++ : s.te <= 39 ? range['30-39']++ : range['40-49']++;
+    s.te <= 9 ? range['1-9']++ : s.te <=19 ? range['10-19']++ : s.te <=29 ? range['20-29']++ : s.te <=39 ? range['30-39']++ : range['40-49']++;
     head[s.head]++; tail[s.tail]++;
     s.wave === 'red' ? color.红++ : s.wave === 'blue' ? color.蓝++ : color.绿++;
     wuxing[s.wuxing]++; animal[s.animal]++;
     if (zodiacAll.includes(s.zod)) zodiac[s.zod]++;
-    numCount[pad(s.te)]++;
-    if (lastAppear[s.te] === -1) lastAppear[s.te] = idx;
   });
 
-  // 遗漏计算
+  const hotSD = Object.entries(singleDouble).sort((a,b)=>b[1]-a[1])[0];
+  const hotBS = Object.entries(bigSmall).sort((a,b)=>b[1]-a[1])[0];
+  const hotHead = Object.entries(head).sort((a,b)=>b[1]-a[1])[0];
+  const hotTail = Object.entries(tail).sort((a,b)=>b[1]-a[1])[0];
+  const hotColor = Object.entries(color).sort((a,b)=>b[1]-a[1])[0];
+  const hotWx = Object.entries(wuxing).sort((a,b)=>b[1]-a[1])[0];
+  const hotZod = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,3).map(i=>i[0]).join('、');
+  const hotAni = Object.entries(animal).sort((a,b)=>b[1]-a[1])[0];
+
+  const lastIdx = {};
+  for (let n=1;n<=49;n++) lastIdx[n] = -1;
+  list.forEach((item, idx) => {
+    const te = getSpecial(item).te;
+    lastIdx[te] = idx;
+  });
   let totalMissSum = 0, maxMiss = 0, hot = 0, warm = 0, cold = 0;
-  const allMiss = [];
-  for (let m = 1; m <= 49; m++) {
-    const p = lastAppear[m];
-    const currentMiss = p === -1 ? total : p;
-    allMiss.push(currentMiss);
-    totalMissSum += currentMiss;
-    if (currentMiss > maxMiss) maxMiss = currentMiss;
-    if (currentMiss <= 3) hot++;
-    else if (currentMiss <= 9) warm++;
+  for (let n=1;n<=49;n++) {
+    const miss = lastIdx[n] === -1 ? total : lastIdx[n];
+    totalMissSum += miss;
+    if (miss > maxMiss) maxMiss = miss;
+    if (miss <= 3) hot++;
+    else if (miss <= 9) warm++;
     else cold++;
   }
   const avgMiss = (totalMissSum / 49).toFixed(1);
-  const curMaxMiss = Math.max(...allMiss);
+  const curMaxMiss = maxMiss;
 
-  // 连出计算：从最新到旧判断
-  let curStreak = 1, maxStreak = 1, current = 1;
+  let currentStreak = 1;
+  let maxStreak = 1;
   if (list.length >= 2) {
-    const firstShape = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
+    const firstKey = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
+    let cur = 1;
     for (let i = 1; i < list.length; i++) {
-      const s = getSpecial(list[i]);
-      const shape = `${s.odd}_${s.big}`;
-      if (shape === firstShape) curStreak++;
-      else break;
-    }
-    let prevShape = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
-    for (let i = 1; i < list.length; i++) {
-      const s = getSpecial(list[i]);
-      const shape = `${s.odd}_${s.big}`;
-      if (shape === prevShape) {
-        current++;
-        if (current > maxStreak) maxStreak = current;
+      const key = `${getSpecial(list[i]).odd}_${getSpecial(list[i]).big}`;
+      if (key === firstKey) {
+        cur++;
+        maxStreak = Math.max(maxStreak, cur);
       } else {
-        current = 1;
-        prevShape = shape;
+        break;
       }
     }
+    currentStreak = cur;
   }
 
-  // 热门排序
-  const hotSD = Object.entries(singleDouble).sort((a, b) => b[1] - a[1])[0];
-  const hotBS = Object.entries(bigSmall).sort((a, b) => b[1] - a[1])[0];
-  const hotHead = Object.entries(head).sort((a, b) => b[1] - a[1])[0];
-  const hotTail = Object.entries(tail).sort((a, b) => b[1] - a[1])[0];
-  const hotColor = Object.entries(color).sort((a, b) => b[1] - a[1])[0];
-  const hotWx = Object.entries(wuxing).sort((a, b) => b[1] - a[1])[0];
-  const hotZod = Object.entries(zodiac).sort((a, b) => b[1] - a[1]).slice(0, 3).map(i => i[0]).join('、');
-  const hotAni = Object.entries(animal).sort((a, b) => b[1] - a[1])[0];
-  const hotNum = Object.entries(numCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(i => i[0]).join(' ');
-
   return {
-    total, singleDouble, bigSmall, range, head, tail, color, wuxing, animal, zodiac, numCount,
-    hotSD, hotBS, hotHead, hotTail, hotColor, hotWx, hotZod, hotAni, hotNum,
-    miss: { curMaxMiss, avgMiss, maxMiss, hot, warm, cold },
-    streak: { curStreak, maxStreak }
+    total, singleDouble, bigSmall, range, head, tail, color, wuxing, animal, zodiac,
+    hotSD, hotBS, hotHead, hotTail, hotColor, hotWx, hotZod, hotAni,
+    miss:{curMaxMiss, avgMiss, maxMiss, hot, warm, cold},
+    streak:{curStreak: currentStreak, maxStreak}
   };
 }
 
@@ -927,14 +1018,12 @@ function renderFullAnalysis() {
   $('hotWrap').style.display = 'block';
   $('emptyTip').style.display = 'none';
 
-  // 热门卡片赋值
   $('hotShape').innerText = `${data.hotSD[0]} / ${data.hotBS[0]}`;
   $('hotZodiac').innerText = data.hotZod;
   $('hotHeadTail').innerText = `${data.hotHead[0]}头 / ${data.hotTail[0]}尾`;
   $('hotColorWx').innerText = `${data.hotColor[0]} / ${data.hotWx[0]}`;
   $('hotMiss').innerText = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold} | 最大遗漏:${data.miss.maxMiss}期`;
 
-  // 基础数值赋值
   $('odd').innerText = data.singleDouble.单;
   $('even').innerText = data.singleDouble.双;
   $('big').innerText = data.bigSmall.大;
@@ -960,7 +1049,6 @@ function renderFullAnalysis() {
   $('aniHome').innerText = data.animal.家禽;
   $('aniWild').innerText = data.animal.野兽;
 
-  // 热门展示
   $('hotShape2').innerText = getTopHot(Object.entries(data.singleDouble).concat(Object.entries(data.bigSmall)));
   $('hotRange2').innerText = getTopHot(Object.entries(data.range));
   $('hotHead2').innerText = getTopHot(Object.entries(data.head));
@@ -968,29 +1056,26 @@ function renderFullAnalysis() {
   $('hotColor2').innerText = getTopHot(Object.entries(data.color));
   $('hotWuxing2').innerText = getTopHot(Object.entries(data.wuxing));
   $('hotAnimal').innerText = getTopHot(Object.entries(data.animal));
-  $('hotZodiac2').innerText = Object.entries(data.zodiac).sort((a, b) => b[1] - a[1]).slice(0, 5).map(i => `${i[0]}(${i[1]})`).join(' ');
-  $('hotNumber').innerText = data.hotNum;
+  $('hotZodiac2').innerText = Object.entries(data.zodiac).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>`${i[0]}(${i[1]})`).join(' ');
+  $('hotNumber').innerText = getCustomTop5().join(' ') || '无';
 
-  // 遗漏&连出
   $('missCur').innerText = data.miss.curMaxMiss;
   $('missAvg').innerText = data.miss.avgMiss;
   $('missMax').innerText = data.miss.maxMiss;
   $('missHot').innerText = data.miss.hot;
   $('missWarm').innerText = data.miss.warm;
   $('missCold').innerText = data.miss.cold;
-  $('hotColdTip').innerText = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold}`;
+  $('hotColdTip').innerHTML = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold}`;
   $('streakCur').innerText = data.streak.curStreak;
   $('streakMax').innerText = data.streak.maxStreak;
-  $('streakTip').innerText = `当前:${data.streak.curStreak}期 最长:${data.streak.maxStreak}期`;
+  $('streakTip').innerHTML = `当前:${data.streak.curStreak}期 最长:${data.streak.maxStreak}期`;
 
-  // 尾数行渲染
   let tailHtml = '';
   for (let t = 0; t <= 9; t++) {
     tailHtml += `<div class="analysis-item"><div class="label">尾${t}</div><div class="value">${data.tail[t]}</div></div>`;
   }
   $('tailRow').innerHTML = tailHtml;
 
-  // 完整排行渲染
   renderFullRank('singleDoubleRank', data.singleDouble, data.total);
   renderFullRank('bigSmallRank', data.bigSmall, data.total);
   renderFullRank('rangeRank', data.range, data.total);
@@ -1002,24 +1087,20 @@ function renderFullAnalysis() {
   renderFullRank('zodiacRank', data.zodiac, data.total);
 }
 
-// ===================== 特码生肖关联计算&渲染（已修改闭环精选逻辑）=====================
 function calcZodiacAnalysis() {
   const { historyData, analyzeLimit } = state;
   if (!historyData.length || historyData.length < 2) return null;
 
-  // 严格遵循：slice(0, limit) 取最新的limit期，数组0=最新
   const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
   const total = list.length;
   const avgExpect = total / 12;
 
-  // 初始化统计对象
   const zodCount = {};
   const lastAppear = {};
   zodiacAll.forEach(z => { zodCount[z] = 0; lastAppear[z] = -1; });
   const tailZodMap = {}; for (let t = 0; t <= 9; t++) tailZodMap[t] = {};
   const followMap = {};
 
-  // 循环统计：从最新到旧遍历，仅第一次出现记录索引（最新位置）
   list.forEach((item, idx) => {
     const s = getSpecial(item);
     if (zodiacAll.includes(s.zod)) {
@@ -1031,7 +1112,6 @@ function calcZodiacAnalysis() {
     }
   });
 
-  // 上期→本期跟随统计：上期=索引i-1，本期=索引i，正确对应新→旧
   for (let i = 1; i < list.length; i++) {
     const preZod = getSpecial(list[i-1]).zod;
     const curZod = getSpecial(list[i]).zod;
@@ -1041,7 +1121,6 @@ function calcZodiacAnalysis() {
     }
   }
 
-  // 正确的遗漏期数计算：索引越小越新，遗漏越少
   const zodMiss = {};
   const zodAvgMiss = {};
   zodiacAll.forEach(z => {
@@ -1049,7 +1128,6 @@ function calcZodiacAnalysis() {
     zodAvgMiss[z] = zodCount[z] > 0 ? (total / zodCount[z]).toFixed(1) : total;
   });
 
-  // 热门排序
   const topZod = Object.entries(zodCount).sort((a, b) => b[1] - a[1]);
   const topTail = Array.from({ length: 10 }, (_, t) => ({
     t, sum: Object.values(tailZodMap[t]).reduce((a, b) => a + b, 0)
@@ -1068,12 +1146,10 @@ function renderZodiacAnalysis() {
   $('zodiacEmptyTip').style.display = 'none';
   $('zodiacContent').style.display = 'block';
 
-  // 共振组合
   $('combo1').innerText = `1. 首选：尾${data.topTail[0]?.t ?? '-'} + ${data.topZod[0]?.[0] ?? '-'}（出现${data.topZod[0]?.[1] ?? 0}次）`;
   $('combo2').innerText = `2. 次选：尾${data.topTail[1]?.t ?? '-'} + ${data.topZod[1]?.[0] ?? '-'}（出现${data.topZod[1]?.[1] ?? 0}次）`;
   $('combo3').innerText = `3. 备选：尾${data.topTail[2]?.t ?? '-'} + ${data.topZod[2]?.[0] ?? '-'}（出现${data.topZod[2]?.[1] ?? 0}次）`;
 
-  // 尾数→生肖网格
   let tailHtml = '';
   for (let t = 0; t <= 9; t++) {
     const arr = Object.entries(data.tailZodMap[t]).sort((a, b) => b[1] - a[1]);
@@ -1084,8 +1160,7 @@ function renderZodiacAnalysis() {
   }
   $('tailZodiacGrid').innerHTML = tailHtml;
 
-  // 跟随表格
-  let followHtml = `<tr><th>上期生肖</th><th>首选(次数)</th><th>次选(次数)</th><th>排除生肖</th></tr>`;
+  let followHtml = ` <th>上期生肖</th><th>首选(次数)</th><th>次选(次数)</th><th>排除生肖</th> `;
   const followKeys = Object.keys(data.followMap).slice(0, 4);
   followKeys.forEach(k => {
     const arr = Object.entries(data.followMap[k]).sort((a, b) => b[1] - a[1]);
@@ -1096,7 +1171,6 @@ function renderZodiacAnalysis() {
   });
   $('zodiacFollowTable').innerHTML = followHtml;
 
-  // 12生肖统计
   let zodHtml = '';
   zodiacAll.forEach(z => {
     const cnt = data.zodCount[z];
@@ -1107,7 +1181,6 @@ function renderZodiacAnalysis() {
   });
   $('zodiacTotalGrid').innerHTML = zodHtml;
 
-  // 高遗漏生肖
   const missSort = Object.entries(data.zodMiss).sort((a, b) => b[1] - a[1]).slice(0, 3);
   let missHtml = '';
   missSort.forEach(([z, m]) => {
@@ -1117,87 +1190,21 @@ function renderZodiacAnalysis() {
   });
   $('zodiacMissGrid').innerHTML = missHtml;
 
-  // ===================== 【已升级】闭环精选特码核心逻辑 =====================
-  // 1. 建立当年标准号码-生肖映射（用最新一期API数据，自动适配当年生肖表）
-  const numZodiacMap = new Map();
-  const latestItem = data.list[0];
-  if (latestItem) {
-    const codeArr = getVal(latestItem, 'openCode', '').split(',');
-    const zodArrRaw = getVal(latestItem, 'zodiac', '').split(',');
-    const zodArr = zodArrRaw.map(z => zodiacTradToSimp[z] || z);
-    codeArr.forEach((num, idx) => {
-      const numVal = Number(num);
-      if (numVal && zodArr[idx]) numZodiacMap.set(numVal, zodArr[idx]);
-    });
-  }
-
-  // 2. 锁定核心生肖池：TOP2热门生肖 + 1个高遗漏反弹生肖（筛选逻辑完全不变）
-  const coreZodiacs = data.topZod.slice(0, 2).map(i => i[0]);
-  const missZodiac = Object.entries(data.zodMiss).sort((a, b) => b[1] - a[1]).slice(0, 1).map(i => i[0]);
-  if (missZodiac.length && !coreZodiacs.includes(missZodiac[0])) coreZodiacs.push(missZodiac[0]);
-
-  // 3. 锁定热门尾数TOP3（筛选逻辑完全不变）
-  const hotTails = data.topTail.slice(0, 3).map(i => i.t);
-
-  // 4. 筛选候选号码：核心生肖 + 热门尾数，叠加权重排序（筛选逻辑完全不变）
-  const candidateNums = [];
-  for (let num = 1; num <= 49; num++) {
-    const zod = numZodiacMap.get(num);
-    const tail = num % 10;
-    // 核心过滤条件完全不变
-    if (coreZodiacs.includes(zod) && hotTails.includes(tail)) {
-      const miss = data.zodMiss[zod] || 0;
-      const count = data.zodCount[zod] || 0;
-      candidateNums.push({
-        num,
-        weight: count * 10 + (10 - miss)
-      });
-    }
-  }
-
-  // 5. 按权重从高到低排序，取用户选择的数量（新增动态数量）
-  const targetCount = state.selectedNumCount;
-  candidateNums.sort((a, b) => b.weight - a.weight);
-  let finalNums = candidateNums.slice(0, targetCount).map(i => i.num);
-
-  // 6. 兜底机制：筛选结果不足目标数量时，用近期热门特码补充
-  if (finalNums.length < targetCount) {
-    const fillNums = [...new Set(data.list.map(item => getSpecial(item).te))]
-      .filter(num => !finalNums.includes(num))
-      .slice(0, targetCount - finalNums.length);
-    finalNums.push(...fillNums);
-  }
-
-  // 7. 【新增要求1】按数字大小从小到大排序
-  finalNums.sort((a, b) => a - b);
-
-  // 8. 【新增要求2】统一转为两位数格式（01 02 03...）
-  const finalFormatNums = finalNums.map(num => pad(num));
-
-  // 渲染到页面
-  $('zodiacFinalNum').innerText = `✅ 精选特码：${finalFormatNums.join(' ') || '无'}`;
-}
-
-// ===================== 基础渲染函数 =====================
-function buildBall(num, color, zodiac, size = 38, fs = 17) {
-  return `
-  <div class="ball-item" style="min-width:${size}px;">
-    <div class="ball ${color}" style="width:${size}px;height:${size}px;font-size:${fs}px;">${num}</div>
-    <div class="ball-zodiac">${zodiac}</div>
-  </div>`;
+  const finalFormatNums = getCustomSelect();
+  $('zodiacFinalNum').innerHTML = `✅ 精选特码（遗漏反弹精选）：${finalFormatNums.join(' ') || '无'}`;
 }
 
 function renderLatest(item) {
   if (!item) return;
   const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
   const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
-  // 渲染时自动转简体
   const s = getSpecial(item);
   const zodArr = s.fullZodArr;
-  let html = '';
-  for (let i = 0; i < 6; i++) html += buildBall(codeArr[i], waveArr[i], zodArr[i]);
-  html += '<div class="ball-sep">+</div>' + buildBall(codeArr[6], waveArr[6], zodArr[6]);
-  $('latestBalls').innerHTML = html;
+  const balls = [];
+  for (let i = 0; i < 6; i++) balls.push(buildBall(codeArr[i], waveArr[i], zodArr[i]));
+  balls.push(`<div class="ball-sep">+</div>`);
+  balls.push(buildBall(codeArr[6], waveArr[6], zodArr[6]));
+  $('latestBalls').innerHTML = `<div class="ball-grid latest-grid">${balls.join('')}</div>`;
   $('curExpect').innerText = getVal(item, 'expect', '--');
 }
 
@@ -1205,27 +1212,26 @@ function renderHistory() {
   const { historyData, showCount } = state;
   const list = historyData.slice(0, showCount);
   if (!list.length) {
-    $('historyList').innerHTML = '<div style="padding:20px;text-align:center;">暂无历史数据</div>';
+    $('historyList').innerHTML = '暂无历史数据';
     return;
   }
   $('historyList').innerHTML = list.map(item => {
     const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
     const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
-    // 渲染时自动转简体
     const s = getSpecial(item);
     const zodArr = s.fullZodArr;
-    let balls = '';
-    for (let i = 0; i < 6; i++) balls += buildBall(codeArr[i], waveArr[i], zodArr[i], 32, 15);
-    balls += '<div class="ball-sep">+</div>' + buildBall(codeArr[6], waveArr[6], zodArr[6], 32, 15);
+    const balls = [];
+    for (let i = 0; i < 6; i++) balls.push(buildBall(codeArr[i], waveArr[i], zodArr[i]));
+    balls.push(`<div class="ball-sep">+</div>`);
+    balls.push(buildBall(codeArr[6], waveArr[6], zodArr[6]));
     return `
-    <div class="history-item">
-      <div class="history-expect">第${getVal(item, 'expect', '')}期</div>
-      <div class="ball-group">${balls}</div>
-    </div>`;
+      <div class="history-item">
+        <div class="history-expect">第${getVal(item, 'expect', '')}期</div>
+        <div class="ball-grid history-grid">${balls.join('')}</div>
+      </div>`;
   }).join('');
 }
 
-// ===================== 交互函数 =====================
 function toggleDetail(id) {
   const el = $(id);
   const btn = el.previousElementSibling.querySelector('.toggle-btn');
@@ -1233,7 +1239,6 @@ function toggleDetail(id) {
   btn.textContent = el.style.display === 'block' ? '收起详情' : '展开详情';
 }
 
-// 期数同步（全维度→生肖）
 function syncAnalyze() {
   const custom = $('customNum').value.trim();
   const selectVal = $('analyzeSelect').value;
@@ -1246,9 +1251,7 @@ function syncAnalyze() {
   renderZodiacAnalysis();
 }
 
-// 期数+数量同步（生肖→全维度）
 function syncZodiacAnalyze() {
-  // 期数同步
   const customPeriod = $('zodiacCustomNum').value.trim();
   const selectPeriodVal = $('zodiacAnalyzeSelect').value;
   state.analyzeLimit = customPeriod && !isNaN(customPeriod) && customPeriod > 0
@@ -1257,13 +1260,10 @@ function syncZodiacAnalyze() {
   $('analyzeSelect').value = selectPeriodVal;
   $('customNum').value = customPeriod;
 
-  // 新增：号码数量同步+校验
   const countVal = $('numCountSelect').value;
   const customCount = $('customNumCount').value.trim();
   let finalCount = 5;
-
   if (countVal === 'custom') {
-    // 自定义数量校验：最小1，最大49，非法值默认5
     finalCount = customCount && !isNaN(customCount) && Number(customCount) >= 1 && Number(customCount) <= 49
       ? Number(customCount)
       : 5;
@@ -1271,24 +1271,18 @@ function syncZodiacAnalyze() {
     finalCount = Number(countVal);
   }
   state.selectedNumCount = finalCount;
-
-  // 重新渲染
   renderFullAnalysis();
   renderZodiacAnalysis();
 }
 
-// 新增：号码数量选择器交互
 $('numCountSelect').onchange = function() {
   const isCustom = this.value === 'custom';
   $('customNumCount').style.display = isCustom ? 'inline-block' : 'none';
-  // 非自定义模式直接同步
   if (!isCustom) {
     state.selectedNumCount = Number(this.value);
     renderZodiacAnalysis();
   }
 };
-
-// 新增：自定义数量输入实时同步
 $('customNumCount').oninput = function() {
   const val = this.value.trim();
   if (val && !isNaN(val) && Number(val) >= 1 && Number(val) <= 49) {
@@ -1297,22 +1291,17 @@ $('customNumCount').oninput = function() {
   }
 };
 
-// ===================== 核心数据处理（去重+排序固化+简体统一）=====================
 async function refreshHistory() {
-  $('historyList').innerHTML = '<div style="padding:20px;text-align:center;">加载中...</div>';
+  $('historyList').innerHTML = '加载中...';
   try {
     const res = await fetch(API.history + YEAR);
     const data = await res.json();
     let rawData = data.data || [];
-
-    // 1. 过滤无效数据：必须有期号和开奖号码
     rawData = rawData.filter(item => {
       const expect = getVal(item, 'expect', '');
       const openCode = getVal(item, 'openCode', '');
       return expect && openCode && openCode.split(',').length === 7;
     });
-
-    // 2. 强制去重：按期号唯一去重，同一期号仅保留1条
     const uniqueMap = new Map();
     rawData.forEach(item => {
       const expectNum = Number(getVal(item, 'expect', 0));
@@ -1320,29 +1309,23 @@ async function refreshHistory() {
         uniqueMap.set(expectNum, item);
       }
     });
-
-    // 3. 强制排序：期号降序排列，期数越大越新，永远排在最前面
     let sortedData = Array.from(uniqueMap.values()).sort((a, b) => {
       const expectA = Number(getVal(a, 'expect', 0));
       const expectB = Number(getVal(b, 'expect', 0));
       return expectB - expectA;
     });
-
-    // 4. 赋值全局状态，所有逻辑统一使用这个排序后的数组
     state.historyData = sortedData;
-
-    // 5. 统一渲染：最新开奖直接用排序后的第一条，和历史记录完全一致
     if (sortedData.length > 0) renderLatest(sortedData[0]);
     renderHistory();
     renderFullAnalysis();
     renderZodiacAnalysis();
   } catch (e) {
-    $('historyList').innerHTML = '<div style="padding:20px;text-align:center;color:#d32f2f;">数据加载失败，请刷新重试</div>';
+    console.error(e);
+    $('historyList').innerHTML = '数据加载失败，请刷新重试';
   }
   $('loadMore').style.display = state.historyData.length > state.showCount ? 'block' : 'none';
 }
 
-// ===================== 倒计时&自动刷新 =====================
 function startCountdown() {
   setInterval(() => {
     const now = new Date();
@@ -1381,7 +1364,6 @@ function checkDrawTimeLoop() {
   }, 60000);
 }
 
-// ===================== 标签切换 =====================
 function bindTabs() {
   $('tabHistory').onclick = () => {
     $('tabHistory').classList.add('active');
@@ -1418,7 +1400,6 @@ function bindTabs() {
   };
 }
 
-// ===================== 初始化 =====================
 window.onload = () => {
   bindTabs();
   startCountdown();
