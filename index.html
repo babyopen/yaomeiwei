@@ -2,481 +2,14 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>特码全维度分析</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: -apple-system, "Microsoft YaHei", BlinkMacSystemFont, sans-serif;
-  background: #F5F7FA;
-  padding: 12px;
-}
-.container {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.card {
-  background: #FFFFFF;
-  border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 14px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-}
-.card-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1D1D1F;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.card-title::before {
-  content: "";
-  width: 4px;
-  height: 18px;
-  background: #d32f2f;
-  border-radius: 2px;
-}
-.refresh-btn {
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: none;
-  background: #007aff;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-/* 球号网格布局 —— 确保一行显示 6+1 */
-.ball-grid {
-  display: grid;
-  gap: 6px;
-  align-items: center;
-  justify-items: center;
-  margin: 12px 0;
-}
-.latest-grid {
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-}
-.history-grid {
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-}
-.ball-grid .ball-item {
-  width: 100%;
-  min-width: 0;
-}
-.ball-grid .ball {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  font-size: clamp(14px, 4vw, 20px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-}
-.ball-grid .ball.red { background: radial-gradient(circle at 30% 30%, #ff4d4f, #cf1322); }
-.ball-grid .ball.blue { background: radial-gradient(circle at 30% 30%, #40a9ff, #096dd9); }
-.ball-grid .ball.green { background: radial-gradient(circle at 30% 30%, #73d13d, #389e0d); }
-.history-grid .ball {
-  font-size: clamp(12px, 3.5vw, 16px);
-}
-.ball-grid .ball-sep {
-  font-size: clamp(18px, 5vw, 24px);
-  font-weight: bold;
-  line-height: 1;
-  color: #999;
-}
-.ball-zodiac {
-  font-size: 10px;
-  color: #333;
-  font-weight: 600;
-  margin-top: 2px;
-  text-align: center;
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-.history-grid .ball-zodiac {
-  font-size: 9px;
-}
-.latest-grid .ball-zodiac {
-  font-size: 11px;
-}
-
-.tab-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.tab-btn {
-  flex: 1;
-  padding: 10px 6px;
-  border-radius: 14px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  background: #E9EBF0;
-  color: #555;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-.tab-btn.active {
-  background: #d32f2f;
-  color: #fff;
-}
-.tab-btn.analyze.active {
-  background: #007aff;
-  color: #fff;
-}
-.tab-btn.zodiac.active {
-  background: #13a662;
-  color: #fff;
-}
-
-.history-item {
-  padding: 14px 0;
-  border-bottom: 1px solid #F0F0F5;
-}
-.history-expect {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  text-align: left;
-}
-.load-more {
-  text-align: center;
-  padding: 12px;
-  background: #F5F7FA;
-  border-radius: 12px;
-  color: #007aff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.filter-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-.filter-select, .filter-input, .filter-btn {
-  border: 1px solid #E5E7EB;
-  border-radius: 12px;
-  padding: 10px 8px;
-  font-size: 13px;
-  background: #fff;
-  transition: border 0.2s;
-}
-.filter-select:focus, .filter-input:focus {
-  border-color: #007aff;
-  outline: none;
-}
-.filter-select { flex: 1; min-width: 70px; }
-.filter-input { flex: 0.8; min-width: 60px; }
-.filter-btn {
-  background: #007aff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.hot-wrap-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: #d32f2f;
-  margin: 12px 0 16px;
-}
-.hot-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.hot-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px 14px;
-  border-left: 5px solid #d32f2f;
-  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.05);
-}
-.hot-card.full {
-  grid-column: span 2;
-  border-left-color: #007aff;
-  background: #fff;
-}
-.hot-card .label {
-  font-size: 12px;
-  color: #8A8A93;
-  margin-bottom: 6px;
-}
-.hot-card .value {
-  font-size: 17px;
-  font-weight: 800;
-  color: #1D1D1F;
-  line-height: 1.3;
-}
-.hot-card.full .value {
-  color: #007aff;
-  font-size: 16px;
-}
-
-.rank-box {
-  margin-top: 14px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-}
-.rank-header {
-  display: flex;
-  padding: 6px 0 8px;
-  font-size: 11px;
-  color: #8A8A93;
-  border-bottom: 1px solid #E5E7EB;
-}
-.rank-header .rank-no { width: 32px; text-align: center; }
-.rank-header .rank-name { flex: 1; padding: 0 6px; }
-.rank-header .rank-count { width: 42px; text-align: right; }
-.rank-header .rank-rate { width: 48px; text-align: right; }
-.rank-header .rank-miss { width: 48px; text-align: right; }
-
-.rank-row {
-  display: flex;
-  padding: 8px 0;
-  font-size: 12px;
-  border-bottom: 1px solid #F0F0F5;
-  align-items: center;
-}
-.rank-row:last-child { border-bottom: none; }
-.rank-row .rank-no {
-  width: 32px;
-  text-align: center;
-  font-weight: 700;
-  color: #d32f2f;
-}
-.rank-row .rank-name { flex: 1; padding: 0 6px; }
-.rank-row .rank-count {
-  width: 42px;
-  text-align: right;
-  font-weight: 600;
-}
-.rank-row .rank-rate {
-  width: 48px;
-  text-align: right;
-  color: #8A8A93;
-}
-.rank-row .rank-miss {
-  width: 48px;
-  text-align: right;
-  color: #8A8A93;
-}
-
-.sub-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin: 20px 0 12px;
-  color: #1D1D1F;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.hot-tag {
-  display: inline-block;
-  background: #FFECEC;
-  color: #d32f2f;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-left: 6px;
-}
-.toggle-btn {
-  font-size: 12px;
-  font-weight: 600;
-  color: #007aff;
-  background: #F0F5FF;
-  padding: 4px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: none;
-  transition: background 0.2s;
-}
-.toggle-btn:hover {
-  background: #E0EDFF;
-}
-
-.analysis-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.analysis-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 10px 0;
-}
-.analysis-item {
-  flex: 1;
-  min-width: 72px;
-  background: #F7F8FA;
-  padding: 12px 10px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 12px;
-}
-.analysis-item .label {
-  color: #8A8A93;
-  font-size: 11px;
-  margin-bottom: 4px;
-}
-.analysis-item .value {
-  font-weight: 700;
-  font-size: 15px;
-  color: #007aff;
-}
-
-.item-full {
-  background: #F7F8FA;
-  padding: 12px 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  color: #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.detail-box {
-  display: none;
-  margin-top: 10px;
-  background: #F9FAFC;
-  border-radius: 12px;
-  padding: 14px;
-}
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-.empty-tip {
-  text-align: center;
-  padding: 24px 0;
-  color: #8A8A93;
-  font-size: 14px;
-}
-
-.countdown-small {
-  text-align: center;
-  font-size: 12px;
-  color: #cf1322;
-  margin-top: 6px;
-}
-.countdown-small .num {
-  font-family: monospace;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.core-conclusion {
-  background: #FFF5F5;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 16px;
-}
-.conclusion-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #13a662;
-  margin-bottom: 8px;
-}
-.conclusion-item {
-  font-size: 14px;
-  line-height: 1.6;
-}
-.data-grid-z {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.data-grid-4 {
-  grid-template-columns: repeat(4, 1fr) !important;
-}
-.data-grid-3 {
-  grid-template-columns: repeat(3, 1fr) !important;
-}
-.data-item-z {
-  background: #F7F8FA;
-  border-radius: 8px;
-  padding: 10px 6px;
-  text-align: center;
-  font-size: 12px;
-}
-.data-item-z.hot {
-  background: #E6F7F0;
-  color: #13a662;
-  font-weight: 700;
-}
-.data-item-z.cold {
-  background: #FFF2F0;
-  color: #d32f2f;
-  font-weight: 700;
-}
-.data-item-z.warm {
-  background: #FFF7E6;
-  color: #fa8c16;
-}
-.follow-table-z {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  margin-top: 8px;
-}
-.follow-table-z th, .follow-table-z td {
-  border: 1px solid #E5E7EB;
-  padding: 6px 4px;
-  text-align: center;
-}
-.follow-table-z th {
-  background: #F7F8FA;
-  font-weight: 700;
-}
-.final-recommend-z {
-  background: #E6F7F0;
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 700;
-  color: #13a662;
-  margin-top: 10px;
-  word-break: break-all;
-  line-height: 1.6;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
 
+  <!-- 最新开奖 + 倒计时模块 -->
   <div class="card latest-card">
     <div style="text-align:center; margin-bottom:12px;">
       <div style="font-size:15px; color:#967341;">第 <span id="curExpect">--</span> 期开奖结果</div>
@@ -484,26 +17,29 @@ body {
         距离下期开奖还有 <span class="num" id="countdown">00:00:00</span>
       </div>
     </div>
-    <div id="latestBalls"></div>
+    <div class="ball-group" id="latestBalls"></div>
   </div>
 
+  <!-- 标签栏 -->
   <div class="tab-bar">
-    <button class="tab-btn active" id="tabHistory">历史记录</button>
-    <button class="tab-btn analyze" id="tabAnalysis">全维度分析</button>
-    <button class="tab-btn zodiac" id="tabZodiac">特码生肖关联</button>
+    <button class="tab-btn active" id="tabHistory" data-action="tab-history">历史记录</button>
+    <button class="tab-btn analyze" id="tabAnalysis" data-action="tab-analysis">全维度分析</button>
+    <button class="tab-btn zodiac" id="tabZodiac" data-action="tab-zodiac">特码生肖关联</button>
   </div>
 
+  <!-- 1. 历史记录模块 -->
   <div class="tab-panel active" id="historyPanel">
     <div class="card">
       <div class="card-title-row">
         <div class="card-title">历史记录</div>
-        <button class="refresh-btn" onclick="refreshHistory()">刷新历史</button>
+        <button class="refresh-btn" data-action="refresh-history">刷新历史</button>
       </div>
       <div id="historyList">加载中...</div>
-      <div id="loadMore" class="load-more" style="display:none;">点击加载更多</div>
+      <div id="loadMore" class="load-more" style="display:none;" data-action="load-more">点击加载更多</div>
     </div>
   </div>
 
+  <!-- 2. 全维度分析模块 -->
   <div class="tab-panel" id="analysisPanel">
     <div class="card">
       <div class="card-title">特码全维度统计</div>
@@ -515,7 +51,7 @@ body {
           <option value="all">全年数据</option>
         </select>
         <input type="number" id="customNum" class="filter-input" placeholder="自定义期数">
-        <button class="filter-btn" onclick="syncAnalyze()">确认</button>
+        <button class="filter-btn" data-action="sync-analyze">确认</button>
       </div>
 
       <div class="empty-tip" id="emptyTip">暂无数据可分析</div>
@@ -538,7 +74,7 @@ body {
 
       <div class="sub-title">
         <span>单双 & 大小 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail1')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail1">展开详情</button>
       </div>
       <div class="item-full">热门 → <span id="hotShape2">--</span></div>
       <div class="detail-box" id="detail1">
@@ -554,7 +90,7 @@ body {
 
       <div class="sub-title">
         <span>区间统计 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail2')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail2">展开详情</button>
       </div>
       <div class="item-full">热门区间 → <span id="hotRange2">--</span></div>
       <div class="detail-box" id="detail2">
@@ -570,7 +106,7 @@ body {
 
       <div class="sub-title">
         <span>头数统计 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail3')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail3">展开详情</button>
       </div>
       <div class="item-full">热门头数 → <span id="hotHead2">--</span></div>
       <div class="detail-box" id="detail3">
@@ -586,7 +122,7 @@ body {
 
       <div class="sub-title">
         <span>尾数统计 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail4')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail4">展开详情</button>
       </div>
       <div class="item-full">热门尾数 → <span id="hotTail2">--</span></div>
       <div class="detail-box" id="detail4">
@@ -596,7 +132,7 @@ body {
 
       <div class="sub-title">
         <span>波色统计 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail5')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail5">展开详情</button>
       </div>
       <div class="item-full">热门波色 → <span id="hotColor2">--</span></div>
       <div class="detail-box" id="detail5">
@@ -610,7 +146,7 @@ body {
 
       <div class="sub-title">
         <span>五行统计 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail6')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail6">展开详情</button>
       </div>
       <div class="item-full">热门五行 → <span id="hotWuxing2">--</span></div>
       <div class="detail-box" id="detail6">
@@ -626,7 +162,7 @@ body {
 
       <div class="sub-title">
         <span>家禽/野兽 <span class="hot-tag">热门</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail7')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail7">展开详情</button>
       </div>
       <div class="item-full">热门 → <span id="hotAnimal">--</span></div>
       <div class="detail-box" id="detail7">
@@ -639,7 +175,7 @@ body {
 
       <div class="sub-title">
         <span>遗漏统计 <span class="hot-tag">公式版</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail8')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail8">展开详情</button>
       </div>
       <div class="item-full">热号/温号/冷号 → <span id="hotColdTip">--</span></div>
       <div class="detail-box" id="detail8">
@@ -655,7 +191,7 @@ body {
 
       <div class="sub-title">
         <span>连出统计 <span class="hot-tag">公式版</span></span>
-        <button class="toggle-btn" onclick="toggleDetail('detail9')">展开详情</button>
+        <button class="toggle-btn" data-action="toggle-detail" data-target="detail9">展开详情</button>
       </div>
       <div class="item-full">当前/最长连出 → <span id="streakTip">--</span></div>
       <div class="detail-box" id="detail9">
@@ -665,14 +201,12 @@ body {
         </div>
       </div>
 
-      <div class="sub-title" style="color:#d32f2f">综合热门特码 TOP5</div>
-      <div class="item-full">
-        特码热门TOP5（生肖+尾数+五行组合）→
-        <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span>
-      </div>
+      <div class="sub-title" style="color:#d32f2f">综合热门特码</div>
+      <div class="item-full">特码热门TOP5 → <span id="hotNumber" style="color:#d32f2f;font-weight:700;">--</span></div>
     </div>
   </div>
 
+  <!-- 3. 特码生肖关联模块 -->
   <div class="tab-panel" id="zodiacAnalysisPanel">
     <div class="card">
       <div class="card-title-row">
@@ -694,7 +228,7 @@ body {
           <option value="custom">自定义</option>
         </select>
         <input type="number" id="customNumCount" class="filter-input" placeholder="自定义数量" style="display:none;">
-        <button class="filter-btn" onclick="syncZodiacAnalyze()">确认</button>
+        <button class="filter-btn" data-action="sync-zodiac">确认</button>
       </div>
 
       <div class="empty-tip" id="zodiacEmptyTip">暂无开奖历史数据</div>
@@ -718,695 +252,31 @@ body {
         <div class="sub-title" style="color:#13a662;">④ 高遗漏生肖（反弹关注）</div>
         <div class="data-grid-z data-grid-3" id="zodiacMissGrid"></div>
 
-        <div class="final-recommend-z" id="zodiacFinalNum">✅ 精选特码（遗漏反弹精选）：--</div>
+        <div class="final-recommend-z" id="zodiacFinalNum">✅ 精选特码：--</div>
       </div>
     </div>
   </div>
 
 </div>
 
-<script>
-const API = {
-  history: 'https://history.macaumarksix.com/history/macaujc2/y/'
-};
-const YEAR = new Date().getFullYear();
-const zodiacAll = ["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
-const homeZodiac = ['鼠','牛','兔','马','羊','鸡','狗','猪'];
-const wildZodiac = ['虎','龙','蛇','猴'];
-const zodiacTradToSimp = {
-  '鼠': '鼠', '牛': '牛', '虎': '虎', '兔': '兔',
-  '龍': '龙', '龙': '龙', '蛇': '蛇', '馬': '马', '马': '马',
-  '羊': '羊', '猴': '猴', '雞': '鸡', '鸡': '鸡', '狗': '狗',
-  '豬': '猪', '猪': '猪'
-};
-
-const $ = id => document.getElementById(id);
-const pad = n => String(n).padStart(2, '0');
-
-const getVal = (obj, path, def = '') => {
-  return path.split('.').reduce((o, k) => (o || {})[k], obj) ?? def;
-};
-
-const getSpecial = item => {
-  const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
-  const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
-  const zodArrRaw = getVal(item, 'zodiac', ',,,,,,,,,,,,').split(',');
-  const zodArr = zodArrRaw.map(z => zodiacTradToSimp[z] || z);
-  const te = Math.max(0, Number(codeArr[6]));
-  return {
-    te,
-    tail: te % 10,
-    head: Math.floor(te / 10),
-    wave: waveArr[6],
-    zod: zodArr[6] || '-',
-    odd: te % 2 === 1,
-    big: te >= 25,
-    animal: homeZodiac.includes(zodArr[6]) ? '家禽' : '野兽',
-    wuxing: getWuxing(te),
-    fullZodArr: zodArr
-  };
-};
-
-const getWuxing = n => {
-  const m = n % 10;
-  if ([0,5].includes(m)) return '金';
-  if ([1,6].includes(m)) return '木';
-  if ([2,7].includes(m)) return '水';
-  if ([3,8].includes(m)) return '火';
-  return '土';
-};
-
-const getZodiacLevel = (count, miss, total) => {
-  const avgCount = total / 12;
-  if (count >= avgCount * 1.5 && miss <= 3) return { cls: 'hot', text: '热' };
-  if (count <= avgCount * 0.5 || miss >= 8) return { cls: 'cold', text: '冷' };
-  return { cls: 'warm', text: '温' };
-};
-
-const renderFullRank = (containerId, dataObj, total) => {
-  if (total === 0) { $(containerId).innerHTML = ''; return; }
-  const sorted = Object.entries(dataObj).sort((a, b) => b[1] - a[1]);
-  let html = `
-  <div class="rank-header">
-    <div class="rank-no">名次</div>
-    <div class="rank-name">分类</div>
-    <div class="rank-count">次数</div>
-    <div class="rank-rate">占比</div>
-    <div class="rank-miss">遗漏</div>
-  </div>`;
-  sorted.forEach(([name, count], idx) => {
-    const rate = ((count / total) * 100).toFixed(0) + '%';
-    const miss = count > 0 ? Math.floor((total - count) / count) : total;
-    html += `
-    <div class="rank-row">
-      <div class="rank-no">${idx + 1}</div>
-      <div class="rank-name">${name}</div>
-      <div class="rank-count">${count}</div>
-      <div class="rank-rate">${rate}</div>
-      <div class="rank-miss">${miss}</div>
-    </div>`;
-  });
-  $(containerId).innerHTML = html;
-};
-
-const getTopHot = (arr, limit = 2) => {
-  return arr.sort((a, b) => b[1] - a[1]).slice(0, limit).map(i => i[0]).join(' / ');
-};
-
-let state = {
-  historyData: [],
-  analyzeLimit: 30,
-  selectedNumCount: 5,
-  showCount: 20,
-  autoRefreshTimer: null
-};
-
-// 构建球号（不再内联宽高，完全由CSS控制）
-function buildBall(num, color, zodiac) {
-  return `
-    <div class="ball-item">
-      <div class="ball ${color}">${num}</div>
-      <div class="ball-zodiac">${zodiac}</div>
-    </div>`;
-}
-
-function getCustomTop5() {
-  const list = state.historyData.slice(0, state.analyzeLimit);
-  if (!list.length) return [];
-
-  const zodCount = {};
-  zodiacAll.forEach(z => zodCount[z] = 0);
-  const tailCount = {};
-  for (let t=0;t<=9;t++) tailCount[t] = 0;
-  const wxCount = {金:0,木:0,水:0,火:0,土:0};
-
-  list.forEach(item => {
-    const s = getSpecial(item);
-    if (zodiacAll.includes(s.zod)) zodCount[s.zod]++;
-    tailCount[s.tail]++;
-    wxCount[s.wuxing]++;
-  });
-
-  const topZod = Object.entries(zodCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
-  const topTail = Object.entries(tailCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>Number(x[0]));
-  const topWx = Object.entries(wxCount).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]);
-
-  const numZodMap = new Map();
-  if (state.historyData[0]) {
-    const codes = getVal(state.historyData[0], 'openCode', '').split(',');
-    const zods = getVal(state.historyData[0], 'zodiac', '').split(',').map(z=>zodiacTradToSimp[z]||z);
-    codes.forEach((n,i)=>{
-      const num = Number(n);
-      if (num && zods[i]) numZodMap.set(num, zods[i]);
-    });
-  }
-
-  const candidates = [];
-  for (let n=1;n<=49;n++) {
-    const z = numZodMap.get(n);
-    const t = n % 10;
-    const wx = getWuxing(n);
-    if (topZod.includes(z) && topTail.includes(t) && topWx.includes(wx)) {
-      candidates.push(n);
-    }
-  }
-
-  const unique = [...new Set(candidates)];
-  unique.sort((a,b)=>a-b);
-  return unique.slice(0,5).map(pad);
-}
-
-function getCustomSelect() {
-  const list = state.historyData.slice(0, state.analyzeLimit);
-  if (!list.length) return [];
-
-  const recent5 = new Set();
-  list.slice(0,5).forEach(item=>{
-    recent5.add(getSpecial(item).te);
-  });
-
-  const countMap = {};
-  const lastIdx = {};
-  for (let n=1;n<=49;n++) {
-    countMap[n] = 0;
-    lastIdx[n] = -1;
-  }
-
-  list.forEach((item, idx)=>{
-    const te = getSpecial(item).te;
-    countMap[te]++;
-    lastIdx[te] = idx;
-  });
-
-  const total = list.length;
-  const avgMissTotal = total / 49;
-
-  const pool = [];
-  for (let n=1;n<=49;n++) {
-    if (recent5.has(n)) continue;
-    const cnt = countMap[n];
-    const miss = lastIdx[n] === -1 ? total : lastIdx[n];
-    const avg = cnt > 0 ? total / cnt : total;
-    if (miss >= avg && miss <= avg * 2.5 && cnt >= 1) {
-      const score = cnt * 10 + (10 - Math.min(miss,10));
-      pool.push({ num:n, score });
-    }
-  }
-
-  pool.sort((a,b)=>b.score - a.score);
-  const need = state.selectedNumCount;
-  let res = pool.slice(0, need).map(x=>x.num);
-
-  if (res.length < need) {
-    const fill = [];
-    for (let n=1;n<=49;n++) {
-      if (!recent5.has(n) && !res.includes(n)) fill.push(n);
-    }
-    res = res.concat(fill).slice(0, need);
-  }
-
-  res.sort((a,b)=>a-b);
-  return res.map(pad);
-}
-
-function calcFullAnalysis() {
-  const { historyData, analyzeLimit } = state;
-  if (!historyData.length) return null;
-  const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
-  const total = list.length;
-
-  const singleDouble = { 单: 0, 双: 0 };
-  const bigSmall = { 大: 0, 小: 0 };
-  const range = { '1-9': 0, '10-19': 0, '20-29': 0, '30-39': 0, '40-49': 0 };
-  const head = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
-  const tail = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
-  const color = { 红: 0, 蓝: 0, 绿: 0 };
-  const wuxing = { 金: 0, 木: 0, 水: 0, 火: 0, 土: 0 };
-  const animal = { 家禽: 0, 野兽: 0 };
-  const zodiac = {}; zodiacAll.forEach(z => zodiac[z] = 0);
-
-  list.forEach((item, idx) => {
-    const s = getSpecial(item);
-    s.odd ? singleDouble.单++ : singleDouble.双++;
-    s.big ? bigSmall.大++ : bigSmall.小++;
-    s.te <= 9 ? range['1-9']++ : s.te <=19 ? range['10-19']++ : s.te <=29 ? range['20-29']++ : s.te <=39 ? range['30-39']++ : range['40-49']++;
-    head[s.head]++; tail[s.tail]++;
-    s.wave === 'red' ? color.红++ : s.wave === 'blue' ? color.蓝++ : color.绿++;
-    wuxing[s.wuxing]++; animal[s.animal]++;
-    if (zodiacAll.includes(s.zod)) zodiac[s.zod]++;
-  });
-
-  const hotSD = Object.entries(singleDouble).sort((a,b)=>b[1]-a[1])[0];
-  const hotBS = Object.entries(bigSmall).sort((a,b)=>b[1]-a[1])[0];
-  const hotHead = Object.entries(head).sort((a,b)=>b[1]-a[1])[0];
-  const hotTail = Object.entries(tail).sort((a,b)=>b[1]-a[1])[0];
-  const hotColor = Object.entries(color).sort((a,b)=>b[1]-a[1])[0];
-  const hotWx = Object.entries(wuxing).sort((a,b)=>b[1]-a[1])[0];
-  const hotZod = Object.entries(zodiac).sort((a,b)=>b[1]-a[1]).slice(0,3).map(i=>i[0]).join('、');
-  const hotAni = Object.entries(animal).sort((a,b)=>b[1]-a[1])[0];
-
-  const lastIdx = {};
-  for (let n=1;n<=49;n++) lastIdx[n] = -1;
-  list.forEach((item, idx) => {
-    const te = getSpecial(item).te;
-    lastIdx[te] = idx;
-  });
-  let totalMissSum = 0, maxMiss = 0, hot = 0, warm = 0, cold = 0;
-  for (let n=1;n<=49;n++) {
-    const miss = lastIdx[n] === -1 ? total : lastIdx[n];
-    totalMissSum += miss;
-    if (miss > maxMiss) maxMiss = miss;
-    if (miss <= 3) hot++;
-    else if (miss <= 9) warm++;
-    else cold++;
-  }
-  const avgMiss = (totalMissSum / 49).toFixed(1);
-  const curMaxMiss = maxMiss;
-
-  let currentStreak = 1;
-  let maxStreak = 1;
-  if (list.length >= 2) {
-    const firstKey = `${getSpecial(list[0]).odd}_${getSpecial(list[0]).big}`;
-    let cur = 1;
-    for (let i = 1; i < list.length; i++) {
-      const key = `${getSpecial(list[i]).odd}_${getSpecial(list[i]).big}`;
-      if (key === firstKey) {
-        cur++;
-        maxStreak = Math.max(maxStreak, cur);
-      } else {
-        break;
-      }
-    }
-    currentStreak = cur;
-  }
-
-  return {
-    total, singleDouble, bigSmall, range, head, tail, color, wuxing, animal, zodiac,
-    hotSD, hotBS, hotHead, hotTail, hotColor, hotWx, hotZod, hotAni,
-    miss:{curMaxMiss, avgMiss, maxMiss, hot, warm, cold},
-    streak:{curStreak: currentStreak, maxStreak}
-  };
-}
-
-function renderFullAnalysis() {
-  const data = calcFullAnalysis();
-  if (!data) {
-    $('hotWrap').style.display = 'none';
-    $('emptyTip').style.display = 'block';
-    return;
-  }
-  $('hotWrap').style.display = 'block';
-  $('emptyTip').style.display = 'none';
-
-  $('hotShape').innerText = `${data.hotSD[0]} / ${data.hotBS[0]}`;
-  $('hotZodiac').innerText = data.hotZod;
-  $('hotHeadTail').innerText = `${data.hotHead[0]}头 / ${data.hotTail[0]}尾`;
-  $('hotColorWx').innerText = `${data.hotColor[0]} / ${data.hotWx[0]}`;
-  $('hotMiss').innerText = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold} | 最大遗漏:${data.miss.maxMiss}期`;
-
-  $('odd').innerText = data.singleDouble.单;
-  $('even').innerText = data.singleDouble.双;
-  $('big').innerText = data.bigSmall.大;
-  $('small').innerText = data.bigSmall.小;
-  $('r1').innerText = data.range['1-9'];
-  $('r2').innerText = data.range['10-19'];
-  $('r3').innerText = data.range['20-29'];
-  $('r4').innerText = data.range['30-39'];
-  $('r5').innerText = data.range['40-49'];
-  $('h0').innerText = data.head[0];
-  $('h1').innerText = data.head[1];
-  $('h2').innerText = data.head[2];
-  $('h3').innerText = data.head[3];
-  $('h4').innerText = data.head[4];
-  $('cRed').innerText = data.color.红;
-  $('cBlue').innerText = data.color.蓝;
-  $('cGreen').innerText = data.color.绿;
-  $('wJin').innerText = data.wuxing.金;
-  $('wMu').innerText = data.wuxing.木;
-  $('wShui').innerText = data.wuxing.水;
-  $('wHuo').innerText = data.wuxing.火;
-  $('wTu').innerText = data.wuxing.土;
-  $('aniHome').innerText = data.animal.家禽;
-  $('aniWild').innerText = data.animal.野兽;
-
-  $('hotShape2').innerText = getTopHot(Object.entries(data.singleDouble).concat(Object.entries(data.bigSmall)));
-  $('hotRange2').innerText = getTopHot(Object.entries(data.range));
-  $('hotHead2').innerText = getTopHot(Object.entries(data.head));
-  $('hotTail2').innerText = getTopHot(Object.entries(data.tail));
-  $('hotColor2').innerText = getTopHot(Object.entries(data.color));
-  $('hotWuxing2').innerText = getTopHot(Object.entries(data.wuxing));
-  $('hotAnimal').innerText = getTopHot(Object.entries(data.animal));
-  $('hotZodiac2').innerText = Object.entries(data.zodiac).sort((a,b)=>b[1]-a[1]).slice(0,5).map(i=>`${i[0]}(${i[1]})`).join(' ');
-  $('hotNumber').innerText = getCustomTop5().join(' ') || '无';
-
-  $('missCur').innerText = data.miss.curMaxMiss;
-  $('missAvg').innerText = data.miss.avgMiss;
-  $('missMax').innerText = data.miss.maxMiss;
-  $('missHot').innerText = data.miss.hot;
-  $('missWarm').innerText = data.miss.warm;
-  $('missCold').innerText = data.miss.cold;
-  $('hotColdTip').innerHTML = `热:${data.miss.hot} 温:${data.miss.warm} 冷:${data.miss.cold}`;
-  $('streakCur').innerText = data.streak.curStreak;
-  $('streakMax').innerText = data.streak.maxStreak;
-  $('streakTip').innerHTML = `当前:${data.streak.curStreak}期 最长:${data.streak.maxStreak}期`;
-
-  let tailHtml = '';
-  for (let t = 0; t <= 9; t++) {
-    tailHtml += `<div class="analysis-item"><div class="label">尾${t}</div><div class="value">${data.tail[t]}</div></div>`;
-  }
-  $('tailRow').innerHTML = tailHtml;
-
-  renderFullRank('singleDoubleRank', data.singleDouble, data.total);
-  renderFullRank('bigSmallRank', data.bigSmall, data.total);
-  renderFullRank('rangeRank', data.range, data.total);
-  renderFullRank('headRank', data.head, data.total);
-  renderFullRank('tailRank', data.tail, data.total);
-  renderFullRank('colorRank', data.color, data.total);
-  renderFullRank('wuxingRank', data.wuxing, data.total);
-  renderFullRank('animalRank', data.animal, data.total);
-  renderFullRank('zodiacRank', data.zodiac, data.total);
-}
-
-function calcZodiacAnalysis() {
-  const { historyData, analyzeLimit } = state;
-  if (!historyData.length || historyData.length < 2) return null;
-
-  const list = historyData.slice(0, Math.min(analyzeLimit, historyData.length));
-  const total = list.length;
-  const avgExpect = total / 12;
-
-  const zodCount = {};
-  const lastAppear = {};
-  zodiacAll.forEach(z => { zodCount[z] = 0; lastAppear[z] = -1; });
-  const tailZodMap = {}; for (let t = 0; t <= 9; t++) tailZodMap[t] = {};
-  const followMap = {};
-
-  list.forEach((item, idx) => {
-    const s = getSpecial(item);
-    if (zodiacAll.includes(s.zod)) {
-      zodCount[s.zod]++;
-      if (lastAppear[s.zod] === -1) lastAppear[s.zod] = idx;
-    }
-    if (zodiacAll.includes(s.zod)) {
-      tailZodMap[s.tail][s.zod] = (tailZodMap[s.tail][s.zod] || 0) + 1;
-    }
-  });
-
-  for (let i = 1; i < list.length; i++) {
-    const preZod = getSpecial(list[i-1]).zod;
-    const curZod = getSpecial(list[i]).zod;
-    if (zodiacAll.includes(preZod) && zodiacAll.includes(curZod)) {
-      if (!followMap[preZod]) followMap[preZod] = {};
-      followMap[preZod][curZod] = (followMap[preZod][curZod] || 0) + 1;
-    }
-  }
-
-  const zodMiss = {};
-  const zodAvgMiss = {};
-  zodiacAll.forEach(z => {
-    zodMiss[z] = lastAppear[z] === -1 ? total : lastAppear[z];
-    zodAvgMiss[z] = zodCount[z] > 0 ? (total / zodCount[z]).toFixed(1) : total;
-  });
-
-  const topZod = Object.entries(zodCount).sort((a, b) => b[1] - a[1]);
-  const topTail = Array.from({ length: 10 }, (_, t) => ({
-    t, sum: Object.values(tailZodMap[t]).reduce((a, b) => a + b, 0)
-  })).sort((a, b) => b.sum - a.sum);
-
-  return { list, total, avgExpect, zodCount, zodMiss, zodAvgMiss, tailZodMap, followMap, topZod, topTail };
-}
-
-function renderZodiacAnalysis() {
-  const data = calcZodiacAnalysis();
-  if (!data) {
-    $('zodiacEmptyTip').style.display = 'block';
-    $('zodiacContent').style.display = 'none';
-    return;
-  }
-  $('zodiacEmptyTip').style.display = 'none';
-  $('zodiacContent').style.display = 'block';
-
-  $('combo1').innerText = `1. 首选：尾${data.topTail[0]?.t ?? '-'} + ${data.topZod[0]?.[0] ?? '-'}（出现${data.topZod[0]?.[1] ?? 0}次）`;
-  $('combo2').innerText = `2. 次选：尾${data.topTail[1]?.t ?? '-'} + ${data.topZod[1]?.[0] ?? '-'}（出现${data.topZod[1]?.[1] ?? 0}次）`;
-  $('combo3').innerText = `3. 备选：尾${data.topTail[2]?.t ?? '-'} + ${data.topZod[2]?.[0] ?? '-'}（出现${data.topZod[2]?.[1] ?? 0}次）`;
-
-  let tailHtml = '';
-  for (let t = 0; t <= 9; t++) {
-    const arr = Object.entries(data.tailZodMap[t]).sort((a, b) => b[1] - a[1]);
-    const topZ = arr.length ? arr[0][0] : '-';
-    const cnt = arr.length ? arr[0][1] : 0;
-    const level = getZodiacLevel(cnt, data.zodMiss[topZ] || 0, data.total);
-    tailHtml += `<div class="data-item-z ${level.cls}">尾${t}<br>${topZ}<br>${cnt}次</div>`;
-  }
-  $('tailZodiacGrid').innerHTML = tailHtml;
-
-  let followHtml = ` <th>上期生肖</th><th>首选(次数)</th><th>次选(次数)</th><th>排除生肖</th> `;
-  const followKeys = Object.keys(data.followMap).slice(0, 4);
-  followKeys.forEach(k => {
-    const arr = Object.entries(data.followMap[k]).sort((a, b) => b[1] - a[1]);
-    const first = arr[0] ? `${arr[0][0]}(${arr[0][1]})` : '-';
-    const second = arr[1] ? `${arr[1][0]}(${arr[1][1]})` : '-';
-    const exclude = zodiacAll.filter(z => !arr.some(x => x[0] === z)).slice(0, 2).join('、');
-    followHtml += `<tr><td>${k}</td><td>${first}</td><td>${second}</td><td>${exclude || '-'}</td></tr>`;
-  });
-  $('zodiacFollowTable').innerHTML = followHtml;
-
-  let zodHtml = '';
-  zodiacAll.forEach(z => {
-    const cnt = data.zodCount[z];
-    const miss = data.zodMiss[z];
-    const rate = ((cnt / data.total) * 100).toFixed(0) + '%';
-    const level = getZodiacLevel(cnt, miss, data.total);
-    zodHtml += `<div class="data-item-z ${level.cls}">${z}<br>${cnt}次/${rate}<br>遗${miss}</div>`;
-  });
-  $('zodiacTotalGrid').innerHTML = zodHtml;
-
-  const missSort = Object.entries(data.zodMiss).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  let missHtml = '';
-  missSort.forEach(([z, m]) => {
-    const avgMiss = data.zodAvgMiss[z];
-    const tag = m > avgMiss ? '超平均' : '';
-    missHtml += `<div class="data-item-z cold">${z}<br>遗${m}期<br>${tag}</div>`;
-  });
-  $('zodiacMissGrid').innerHTML = missHtml;
-
-  const finalFormatNums = getCustomSelect();
-  $('zodiacFinalNum').innerHTML = `✅ 精选特码（遗漏反弹精选）：${finalFormatNums.join(' ') || '无'}`;
-}
-
-function renderLatest(item) {
-  if (!item) return;
-  const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
-  const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
-  const s = getSpecial(item);
-  const zodArr = s.fullZodArr;
-  const balls = [];
-  for (let i = 0; i < 6; i++) balls.push(buildBall(codeArr[i], waveArr[i], zodArr[i]));
-  balls.push(`<div class="ball-sep">+</div>`);
-  balls.push(buildBall(codeArr[6], waveArr[6], zodArr[6]));
-  $('latestBalls').innerHTML = `<div class="ball-grid latest-grid">${balls.join('')}</div>`;
-  $('curExpect').innerText = getVal(item, 'expect', '--');
-}
-
-function renderHistory() {
-  const { historyData, showCount } = state;
-  const list = historyData.slice(0, showCount);
-  if (!list.length) {
-    $('historyList').innerHTML = '暂无历史数据';
-    return;
-  }
-  $('historyList').innerHTML = list.map(item => {
-    const codeArr = getVal(item, 'openCode', '0,0,0,0,0,0,0').split(',');
-    const waveArr = getVal(item, 'wave', 'red,red,red,red,red,red,red').split(',');
-    const s = getSpecial(item);
-    const zodArr = s.fullZodArr;
-    const balls = [];
-    for (let i = 0; i < 6; i++) balls.push(buildBall(codeArr[i], waveArr[i], zodArr[i]));
-    balls.push(`<div class="ball-sep">+</div>`);
-    balls.push(buildBall(codeArr[6], waveArr[6], zodArr[6]));
-    return `
-      <div class="history-item">
-        <div class="history-expect">第${getVal(item, 'expect', '')}期</div>
-        <div class="ball-grid history-grid">${balls.join('')}</div>
-      </div>`;
-  }).join('');
-}
-
-function toggleDetail(id) {
-  const el = $(id);
-  const btn = el.previousElementSibling.querySelector('.toggle-btn');
-  el.style.display = el.style.display === 'block' ? 'none' : 'block';
-  btn.textContent = el.style.display === 'block' ? '收起详情' : '展开详情';
-}
-
-function syncAnalyze() {
-  const custom = $('customNum').value.trim();
-  const selectVal = $('analyzeSelect').value;
-  state.analyzeLimit = custom && !isNaN(custom) && custom > 0
-    ? Number(custom)
-    : selectVal === 'all' ? state.historyData.length : Number(selectVal);
-  $('zodiacAnalyzeSelect').value = selectVal;
-  $('zodiacCustomNum').value = custom;
-  renderFullAnalysis();
-  renderZodiacAnalysis();
-}
-
-function syncZodiacAnalyze() {
-  const customPeriod = $('zodiacCustomNum').value.trim();
-  const selectPeriodVal = $('zodiacAnalyzeSelect').value;
-  state.analyzeLimit = customPeriod && !isNaN(customPeriod) && customPeriod > 0
-    ? Number(customPeriod)
-    : selectPeriodVal === 'all' ? state.historyData.length : Number(selectPeriodVal);
-  $('analyzeSelect').value = selectPeriodVal;
-  $('customNum').value = customPeriod;
-
-  const countVal = $('numCountSelect').value;
-  const customCount = $('customNumCount').value.trim();
-  let finalCount = 5;
-  if (countVal === 'custom') {
-    finalCount = customCount && !isNaN(customCount) && Number(customCount) >= 1 && Number(customCount) <= 49
-      ? Number(customCount)
-      : 5;
-  } else {
-    finalCount = Number(countVal);
-  }
-  state.selectedNumCount = finalCount;
-  renderFullAnalysis();
-  renderZodiacAnalysis();
-}
-
-$('numCountSelect').onchange = function() {
-  const isCustom = this.value === 'custom';
-  $('customNumCount').style.display = isCustom ? 'inline-block' : 'none';
-  if (!isCustom) {
-    state.selectedNumCount = Number(this.value);
-    renderZodiacAnalysis();
-  }
-};
-$('customNumCount').oninput = function() {
-  const val = this.value.trim();
-  if (val && !isNaN(val) && Number(val) >= 1 && Number(val) <= 49) {
-    state.selectedNumCount = Number(val);
-    renderZodiacAnalysis();
-  }
-};
-
-async function refreshHistory() {
-  $('historyList').innerHTML = '加载中...';
-  try {
-    const res = await fetch(API.history + YEAR);
-    const data = await res.json();
-    let rawData = data.data || [];
-    rawData = rawData.filter(item => {
-      const expect = getVal(item, 'expect', '');
-      const openCode = getVal(item, 'openCode', '');
-      return expect && openCode && openCode.split(',').length === 7;
-    });
-    const uniqueMap = new Map();
-    rawData.forEach(item => {
-      const expectNum = Number(getVal(item, 'expect', 0));
-      if (expectNum && !isNaN(expectNum)) {
-        uniqueMap.set(expectNum, item);
-      }
-    });
-    let sortedData = Array.from(uniqueMap.values()).sort((a, b) => {
-      const expectA = Number(getVal(a, 'expect', 0));
-      const expectB = Number(getVal(b, 'expect', 0));
-      return expectB - expectA;
-    });
-    state.historyData = sortedData;
-    if (sortedData.length > 0) renderLatest(sortedData[0]);
-    renderHistory();
-    renderFullAnalysis();
-    renderZodiacAnalysis();
-  } catch (e) {
-    console.error(e);
-    $('historyList').innerHTML = '数据加载失败，请刷新重试';
-  }
-  $('loadMore').style.display = state.historyData.length > state.showCount ? 'block' : 'none';
-}
-
-function startCountdown() {
-  setInterval(() => {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(21, 32, 32, 0);
-    if (now > target) target.setDate(target.getDate() + 1);
-    const diff = target - now;
-    const h = pad(Math.floor(diff / 3600000));
-    const m = pad(Math.floor((diff % 3600000) / 60000));
-    const s = pad(Math.floor((diff % 60000) / 1000));
-    $('countdown').innerText = `${h}:${m}:${s}`;
-  }, 1000);
-}
-
-function isInDrawTime() {
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-  return h === 21 && m >= 32 && m <= 40;
-}
-
-function startAutoRefresh() {
-  if (state.autoRefreshTimer) clearInterval(state.autoRefreshTimer);
-  state.autoRefreshTimer = setInterval(() => {
-    if (isInDrawTime()) refreshHistory();
-    else {
-      clearInterval(state.autoRefreshTimer);
-      state.autoRefreshTimer = null;
-    }
-  }, 20000);
-}
-
-function checkDrawTimeLoop() {
-  setInterval(() => {
-    if (isInDrawTime() && !state.autoRefreshTimer) startAutoRefresh();
-  }, 60000);
-}
-
-function bindTabs() {
-  $('tabHistory').onclick = () => {
-    $('tabHistory').classList.add('active');
-    $('tabAnalysis').classList.remove('active');
-    $('tabZodiac').classList.remove('active');
-    $('historyPanel').classList.add('active');
-    $('analysisPanel').classList.remove('active');
-    $('zodiacAnalysisPanel').classList.remove('active');
-  };
-  $('tabAnalysis').onclick = () => {
-    $('tabAnalysis').classList.add('active');
-    $('tabHistory').classList.remove('active');
-    $('tabZodiac').classList.remove('active');
-    $('analysisPanel').classList.add('active');
-    $('historyPanel').classList.remove('active');
-    $('zodiacAnalysisPanel').classList.remove('active');
-    renderFullAnalysis();
-  };
-  $('tabZodiac').onclick = () => {
-    $('tabZodiac').classList.add('active');
-    $('tabHistory').classList.remove('active');
-    $('tabAnalysis').classList.remove('active');
-    $('zodiacAnalysisPanel').classList.add('active');
-    $('historyPanel').classList.remove('active');
-    $('analysisPanel').classList.remove('active');
-    renderZodiacAnalysis();
-  };
-  $('loadMore').onclick = () => {
-    state.showCount += 30;
-    renderHistory();
-    if (state.showCount >= state.historyData.length) {
-      $('loadMore').style.display = 'none';
-    }
-  };
-}
-
-window.onload = () => {
-  bindTabs();
-  startCountdown();
-  refreshHistory();
-  checkDrawTimeLoop();
-  if (isInDrawTime()) startAutoRefresh();
-};
-</script>
+<!-- 脚本按层级顺序加载：core → data → business → platform → views → event → app -->
+<script src="core/config.js"></script>
+<script src="core/utils.js"></script>
+<script src="core/state.js"></script>
+<script src="core/storage.js"></script>
+<script src="data/filter.js"></script>
+<script src="data/data-query.js"></script>
+<script src="business/business-special.js"></script>
+<script src="business/business-analysis.js"></script>
+<script src="business/business-zodiac.js"></script>
+<script src="platform/web/dom.js"></script>
+<script src="platform/web/toast.js"></script>
+<script src="platform/web/render.js"></script>
+<script src="views/view-latest.js"></script>
+<script src="views/view-history.js"></script>
+<script src="views/view-analysis.js"></script>
+<script src="views/view-zodiac.js"></script>
+<script src="event.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
