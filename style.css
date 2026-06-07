@@ -93,6 +93,53 @@ body {
   padding: 0 2px;
 }
 
+/* ===================== 最新开奖专属：7球一行完整显示 =====================
+   关键需求：6 + "+" + 1 = 8 段，在 320px 极小屏也必须完整一行
+   球尺寸由 platform/web/ball-resize.js 动态计算并写入 CSS 变量：
+     --ball-size: 主球直径
+     --ball-font: 球内字号
+     --ball-sep-size: 分隔符大小
+     --ball-sep-mt: 分隔符上间距
+     --ball-zod-font: 生肖字号
+   此处仅保留布局（等分 + 禁止换行 + 居中）
+========================================================================= */
+.latest-card .ball-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2px;
+  margin: 8px 0;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+.latest-card .ball-item {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.latest-card .ball {
+  width: var(--ball-size, 38px);
+  height: var(--ball-size, 38px);
+  font-size: var(--ball-font, 17px);
+}
+.latest-card .ball-sep {
+  font-size: var(--ball-sep-size, 22px);
+  line-height: 1;
+  padding: 0;
+  flex: 0 0 auto;
+  align-self: center;
+  margin-top: var(--ball-sep-mt, 12px);
+  color: #999;
+}
+.latest-card .ball-zodiac {
+  font-size: var(--ball-zod-font, 12px);
+  white-space: nowrap;
+}
+
 .tab-bar {
   display: flex;
   gap: 8px;
@@ -133,7 +180,48 @@ body {
   margin-bottom: 8px;
   text-align: left;
 }
-.history-item .ball-group { justify-content: flex-start; gap: 8px; }
+
+/* ===================== 历史记录：7 球强制一行 =====================
+   球尺寸由 platform/web/ball-resize.js 动态计算，写入独立 CSS 变量
+     --h-ball-size, --h-ball-font, --h-ball-sep-size, --h-ball-sep-mt, --h-ball-zod-font
+   此处仅保留布局
+============================================================= */
+.history-item .ball-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3px;
+  margin: 8px 0;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+.history-item .ball-item {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.history-item .ball {
+  width: var(--h-ball-size, 32px);
+  height: var(--h-ball-size, 32px);
+  font-size: var(--h-ball-font, 14px);
+}
+.history-item .ball-sep {
+  font-size: var(--h-ball-sep-size, 18px);
+  line-height: 1;
+  padding: 0;
+  flex: 0 0 auto;
+  align-self: center;
+  margin-top: var(--h-ball-sep-mt, 9px);
+  color: #999;
+}
+.history-item .ball-zodiac {
+  font-size: var(--h-ball-zod-font, 11px);
+  white-space: nowrap;
+}
 .load-more {
   text-align: center;
   padding: 12px;
@@ -529,17 +617,12 @@ body {
   .data-item-z { font-size: 13px; padding: 12px 8px; }
 }
 
-/* 桌面 ≥ 1025px：双列布局（最新开奖左右分栏） */
+/* 桌面 ≥ 1025px：球尺寸交给 ball-resize.js 动态计算（避免 50px 覆盖） */
 @media (min-width: 1025px) {
   body { padding: 20px; }
   .container { max-width: 960px; }
   .card { padding: 28px; border-radius: 24px; }
-  .latest-card { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: center; }
-  .latest-card > div:first-child { margin-bottom: 0; }
-  .ball { width: 50px; height: 50px; font-size: 22px; }
-  .ball-item { min-width: 50px; }
-  .ball-sep { font-size: 28px; line-height: 50px; }
-  .ball-zodiac { font-size: 15px; }
+  .latest-card > div:first-child { margin-bottom: 12px; }
   .card-title { font-size: 20px; }
   .tab-btn { padding: 14px 12px; font-size: 17px; }
   .hot-grid { gap: 16px; }

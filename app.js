@@ -42,6 +42,11 @@ async function refreshHistory(forceRefresh = false) {
     renderZodiacAnalysis(sortedData, getState('analyzeLimit'), getState('selectedNumCount'));
     renderLoadMoreBtn(sortedData, getState('showCount'));
 
+    // DOM 重建后重新计算球号尺寸
+    if (typeof refreshBallResize === 'function') {
+      requestAnimationFrame(refreshBallResize);
+    }
+
     // 缓存命中提示
     if (result.fromCache) {
       const status = getHistoryCacheStatus();
@@ -79,6 +84,11 @@ async function silentUpdate() {
         renderFullAnalysis(cached.data, getState('analyzeLimit'));
         renderZodiacAnalysis(cached.data, getState('analyzeLimit'), getState('selectedNumCount'));
         renderLoadMoreBtn(cached.data, getState('showCount'));
+      }
+
+      // 重新计算球号尺寸
+      if (typeof refreshBallResize === 'function') {
+        requestAnimationFrame(refreshBallResize);
       }
 
       showToast(`🎉 已更新 ${result.newCount} 条新数据（${status.count}期）`, 'success');
@@ -250,7 +260,12 @@ async function loadMoreYears() {
     renderFullAnalysis(updated.data, getState('analyzeLimit'));
     renderZodiacAnalysis(updated.data, getState('analyzeLimit'), getState('selectedNumCount'));
 
-    // 7. 提示
+    // 7. 重新计算球号尺寸（新 DOM）
+    if (typeof refreshBallResize === 'function') {
+      requestAnimationFrame(refreshBallResize);
+    }
+
+    // 8. 提示
     const fromTxt = result.fromCache ? '（本地）' : '（API）';
     showToast(
       `📥 已加载 ${targetYear} 年 ${result.count} 期${fromTxt}，共 ${merged.total} 期`,
@@ -278,6 +293,14 @@ function initApp() {
   startSilentFetchScheduler();   // 关键点定时器（21:33/35/40）
   checkDrawTimeLoop();           // 开奖时段自动刷新
   if (isInDrawTime()) startAutoRefresh();
+
+  // 启动球号动态自适应监听
+  if (typeof startBallResizeObserver === 'function') {
+    // DOMContentLoaded 之后可能球还没渲染，延迟一帧确保 DOM 完整
+    requestAnimationFrame(() => {
+      startBallResizeObserver();
+    });
+  }
 }
 
 window.addEventListener('DOMContentLoaded', initApp);
